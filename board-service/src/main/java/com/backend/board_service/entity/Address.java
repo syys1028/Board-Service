@@ -1,5 +1,7 @@
 package com.backend.board_service.entity;
 
+import com.backend.board_service.dto.AddressDTO;
+
 public class Address {      // 주소 embadded 타입
     private Long address_id;
     private String city;
@@ -12,6 +14,11 @@ public class Address {      // 주소 embadded 타입
         this.street = street;
         this.zipcode = zipcode;
     }
+
+    public static Address fromDTO(AddressDTO dto) {
+        return new Address(null, dto.getCity(), dto.getStreet(), dto.getZipcode());
+    }
+
 
     public Long getAddress_id() {
         return address_id;

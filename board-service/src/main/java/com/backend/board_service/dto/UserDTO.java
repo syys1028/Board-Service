@@ -1,6 +1,5 @@
 package com.backend.board_service.dto;
 
-import com.backend.board_service.entity.Address;
 import com.backend.board_service.entity.Gender;
 
 import java.time.LocalDateTime;
@@ -11,14 +10,14 @@ public class UserDTO {
     private int age;                        // 나이
     private Gender gender;                  // 성별
     private LocalDateTime createdAt = LocalDateTime.now(); // 작성 시간
-    private Address address;                // 주소
+    private AddressDTO addressDTO;                // 주소
 
-    public UserDTO(String email, int age, Gender gender, LocalDateTime createdAt, Address address) {
+    public UserDTO(String email, int age, Gender gender, LocalDateTime createdAt, AddressDTO addressDTO) {
         this.email = email;
         this.age = age;
         this.gender = gender;
         this.createdAt = createdAt;
-        this.address = address;
+        this.addressDTO = addressDTO;
     }
 
     public String getEmail() {
@@ -35,7 +34,7 @@ public class UserDTO {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
 
-    public Address getAddress() {
-        return address;
+    public AddressDTO getAddressDTO() {
+        return addressDTO;
     }
 }

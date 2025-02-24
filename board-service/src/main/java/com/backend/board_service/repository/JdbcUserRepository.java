@@ -23,7 +23,8 @@ public class JdbcUserRepository implements UserRepository {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public Long saveAddress(Address address) {
+    // 0. 주소 저장
+    public Address saveAddress(Address address) {
         SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate);
         insert.withTableName("addresses").usingGeneratedKeyColumns("address_id");
 
@@ -33,55 +34,63 @@ public class JdbcUserRepository implements UserRepository {
         parameters.put("street", address.getStreet());
         parameters.put("zipcode", address.getZipcode());
 
-        // 테이블 삽입 후 addressId 반환
+        // 테이블 삽입 후 addressId 가져와서 객체 반환
         Number key = insert.executeAndReturnKey(new MapSqlParameterSource(parameters));
-        return key != null ? key.longValue() : null;     // 예외처리
+        Long addressId = key.longValue();
+
+        if (addressId == null) {
+            throw new RuntimeException("주소 저장 실패");     // 예외처리
+        }
+
+        return new Address(addressId, address.getCity(), address.getStreet(), address.getZipcode());
     }
+
+    // 1. 유저 저장
     @Override
     public User saveUser(User user) {
         SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate);
         insert.withTableName("users").usingGeneratedKeyColumns("id");
 
         // 주소 먼저 저장 후 address_id 가져오기
-        Long addressId = saveAddress(user.getAddress());
-        if (addressId == null) {
-            throw new RuntimeException("주소 저장 실패");
-        }
-
-        // USER 객체에서 값 추출
-        String email = user.getEmail();
-        String pw = user.getPw();
-        int age = user.getAge();
-        Gender gender = user.getGender();
-        LocalDateTime createdAt = user.getCreatedAt();
+        Address savedAddress = saveAddress(user.getAddress());
 
         // 데이터 매핑
         Map<String, Object> params = new HashMap<>();
-        params.put("email", email);
-        params.put("pw", pw);
-        params.put("age", age);
-        params.put("gender", gender);
-        params.put("createdAt", createdAt);
-        params.put("address_id", addressId);
+        params.put("email", user.getEmail());
+        params.put("pw", user.getPw());
+        params.put("age", user.getAge());
+        params.put("gender", user.getGender().name());
+        params.put("createdAt", user.getCreatedAt());
+        params.put("address_id", savedAddress.getAddress_id());
 
         // 테이블 삽입 후 userID 가져와서 객체 반환
         Number key = insert.executeAndReturnKey(new MapSqlParameterSource(params));
-        return new User(key.longValue(), email, pw, age, gender, createdAt, user.getAddress());
+        if (key == null) {
+            throw new RuntimeException("유저 저장 실패");
+        }
+
+        return new User(key.longValue(), user.getEmail(), user.getPw(), user.getAge(), user.getGender(), user.getCreatedAt(), savedAddress);
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return Optional.empty();
+        String sql = "SELECT u.*, a.address_id, a.city, a.street, a.zipcode " +
+                "FROM users u " +
+                "JOIN addresses a ON u.address_id = a.address_id " +
+                "WHERE u.email = ?";
+
+        return jdbcTemplate.query(sql, userRowMapper(), email).stream().findFirst();
     }
 
     @Override
     public void updateUser(Long id, User user) {
-
+        String sql = "UPDATE users SET pw = ?, age = ?, gender = ?, address_id = ? WHERE id = ?";
+        jdbcTemplate.update(sql, user.getPw(), user.getAge(), user.getGender().name(), user.getAddress().getAddress_id(), id);
     }
 
     @Override
     public void deleteUser(Long id) {
-
+        jdbcTemplate.update("DELETE FROM users WHERE id = ?", id);
     }
 
     private RowMapper<User> userRowMapper() {
@@ -90,14 +99,15 @@ public class JdbcUserRepository implements UserRepository {
                 rs.getString("email"),
                 rs.getString("pw"),
                 rs.getInt("age"),
-                Gender.valueOf(rs.getString("gender")),
-                LocalDateTime.now(),
+                Gender.valueOf(rs.getString("gender")),  // Enum 변환
+                rs.getTimestamp("createdAt").toLocalDateTime(),
                 new Address(
                         rs.getLong("address_id"),
-                        rs.getString("address_city"),
-                        rs.getString("address_street"),
-                        rs.getString("address_zipcode")
+                        rs.getString("city"),
+                        rs.getString("street"),
+                        rs.getString("zipcode")
                 )
         );
     }
+
 }

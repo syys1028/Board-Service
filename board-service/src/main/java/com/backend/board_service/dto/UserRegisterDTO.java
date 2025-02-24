@@ -12,15 +12,15 @@ public class UserRegisterDTO {
     private int age;                        // 나이
     private Gender gender;                  // 성별
     private LocalDateTime createdAt = LocalDateTime.now(); // 작성 시간
-    private Long addressId;                // 주소
+    private AddressDTO addressDTO;                // 주소
 
-    public UserRegisterDTO(String email, String pw, int age, Gender gender, LocalDateTime createdAt, Long addressId) {
+    public UserRegisterDTO(String email, String pw, int age, Gender gender, LocalDateTime createdAt, AddressDTO addressDTO) {
         this.email = email;
         this.pw = pw;
         this.age = age;
         this.gender = gender;
         this.createdAt = createdAt;
-        this.addressId = addressId;
+        this.addressDTO = addressDTO;
     }
 
     public String getEmail() {
@@ -41,7 +41,7 @@ public class UserRegisterDTO {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
 
-    public Long getAddressId() {
-        return addressId;
+    public AddressDTO getAddressDTO() {
+        return addressDTO;
     }
 }

@@ -10,8 +10,7 @@ public class Post {
     private LocalDateTime createdAt = LocalDateTime.now(); // 작성 시간
     private Integer likes = 0;     // 좋아요 수
 
-    public Post(Long id, String title, String contents, Long userID, LocalDateTime createdAt, Integer likes) {
-        this.id = id;
+    public Post(String title, String contents, Long userID, LocalDateTime createdAt, Integer likes) {
         this.title = title;
         this.contents = contents;
         this.userID = userID;

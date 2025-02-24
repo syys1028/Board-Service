@@ -1,5 +1,7 @@
 package com.backend.board_service.entity;
 
+import com.backend.board_service.dto.UserRegisterDTO;
+
 import java.time.LocalDateTime;
 
 // Repository
@@ -20,6 +22,11 @@ public class User {
         this.gender = gender;
         this.createdAt = createdAt;
         this.address = address;
+    }
+
+    // DTO -> User로 변환
+    public static User fromRegisterDTO(UserRegisterDTO dto) {
+        return new User(null, dto.getEmail(), dto.getPw(), dto.getAge(), dto.getGender(), dto.getCreatedAt(), Address.fromDTO(dto.getAddressDTO()));
     }
 
     public Long getId() {
