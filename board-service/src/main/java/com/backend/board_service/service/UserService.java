@@ -39,7 +39,7 @@ public class UserService {
         return jdbcUserRepository.saveUser(user).getId();
     }
 
-    // 2. 회원 정보 조회
+    // 2-1. 회원 정보 조회 (이메일)
     public Optional<UserDTO> findUserByEmail(String email) {
         return jdbcUserRepository.findByEmail(email)
                 .map(user -> new UserDTO(
@@ -51,6 +51,7 @@ public class UserService {
                 ));
     }
 
+    // 2-2. 회원 정보 조회 (아이디)
     public Optional<UserDTO> findUserById(Long id) {
         return jdbcUserRepository.findById(id)
                 .map(user -> new UserDTO(
@@ -60,6 +61,12 @@ public class UserService {
                         user.getCreatedAt(),
                         AddressDTO.fromEntity(user.getAddress())
                 ));
+    }
+
+    // 2-3. 회원 정보 조회 후 아이디 반환 (이메일)
+    public Long getUserIdByEmail(String email) {
+        Optional<User> user = jdbcUserRepository.findByEmail(email);
+        return user.map(User::getId).orElse(null);
     }
 
     // 3. 회원 정보 수정
