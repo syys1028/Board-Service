@@ -27,7 +27,7 @@ class JdbcUserRepositoryTest {
     void 회원_저장_및_조회() {
         // Given
         UserRegisterDTO userDTO = new UserRegisterDTO(
-                "test@email.com", "password123", 25, Gender.MALE, LocalDateTime.now(),
+                "aaa123@naver.com", "asdf1234!", 25, Gender.FEMALE, LocalDateTime.now(),
                 new AddressDTO("군산", "나운우회로 91", "54124")
         );
 
@@ -46,18 +46,44 @@ class JdbcUserRepositoryTest {
     }
 
     @Test
-    void 수정() {
+    void 회원_수정() {
+        // Given
+        UserRegisterDTO userDTO = new UserRegisterDTO(
+                "aaa123@naver.com", "asdf1234!", 25, Gender.FEMALE, LocalDateTime.now(),
+                new AddressDTO("군산", "나운우회로 91", "54124")
+        );
+        User user = User.fromRegisterDTO(userDTO);
+        User savedUser = userRepository.saveUser(user);
 
+        // When
+        User updatedUser = new User(
+                savedUser.getId(), savedUser.getEmail(), savedUser.getPw(),
+                30, savedUser.getGender(), savedUser.getCreatedAt(), savedUser.getAddress()
+        );
+        userRepository.updateUser(savedUser.getId(), updatedUser);
+
+        // Then
+        Optional<User> foundUser = userRepository.findByEmail(savedUser.getEmail());
+        assertThat(foundUser).isPresent();
+        assertThat(foundUser.get().getAge()).isEqualTo(30);
     }
 
     @Test
-    void 삭제() {
+    void 회원_삭제() {
+        // Given
+        UserRegisterDTO userDTO = new UserRegisterDTO(
+                "aaa123@naver.com", "asdf1234!", 25, Gender.FEMALE, LocalDateTime.now(),
+                new AddressDTO("군산", "나운우회로 91", "54124")
+        );
+        User user = User.fromRegisterDTO(userDTO);
+        User savedUser = userRepository.saveUser(user);
 
-    }
+        // When
+        userRepository.deleteUser(savedUser.getId());
 
-    @Test
-    void 이메일_중복_방지() {
-
+        // Then
+        Optional<User> foundUser = userRepository.findByEmail(savedUser.getEmail());
+        assertThat(foundUser).isEmpty();
     }
 
 }

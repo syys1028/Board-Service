@@ -19,7 +19,6 @@ public class Address {      // 주소 embadded 타입
         return new Address(null, dto.getCity(), dto.getStreet(), dto.getZipcode());
     }
 
-
     public Long getAddress_id() {
         return address_id;
     }
