@@ -51,6 +51,17 @@ public class UserService {
                 ));
     }
 
+    public Optional<UserDTO> findUserById(Long id) {
+        return jdbcUserRepository.findById(id)
+                .map(user -> new UserDTO(
+                        user.getEmail(),
+                        user.getAge(),
+                        user.getGender(),
+                        user.getCreatedAt(),
+                        AddressDTO.fromEntity(user.getAddress())
+                ));
+    }
+
     // 3. 회원 정보 수정
     public boolean updateUser(Long id, UserRegisterDTO userDTO) {
         Optional<User> existingUser = jdbcUserRepository.findById(id);
@@ -58,7 +69,7 @@ public class UserService {
             throw new IllegalArgumentException("해당 ID의 사용자가 존재하지 않습니다.");
         }
 
-        // 나중에 변경된 값만 반영하도록 수정, 그리고 어떤 값을 수정할 수 있도록 할건지 고려
+        // 나중에 변경된 값만 반영하도록 수정, 그리고 어떤 값을 수정할 수 있도록 할건지 고려 (이메일 x)
 
         LocalDateTime createdAt = existingUser.get().getCreatedAt(); // 기존 회원가입 시간 유지 (수정에 반영 x)
         Address existingAddress = existingUser.get().getAddress(); // 기존 주소 유지

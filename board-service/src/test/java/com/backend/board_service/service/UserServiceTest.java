@@ -71,13 +71,14 @@ class UserServiceTest {
 
         // when
         boolean isUpdate = userService.updateUser(userId, updatedUserDTO);
-        Optional<UserDTO> foundUser = userService.findUserByEmail(testUserDTO.getEmail());
+        Optional<UserDTO> foundUser = userService.findUserById(userId);
 
         // then
         assertThat(isUpdate).isTrue();
         assertThat(foundUser).isPresent();
         assertThat(foundUser.get().getEmail()).isEqualTo(updatedUserDTO.getEmail());
         assertThat(foundUser.get().getAge()).isEqualTo(updatedUserDTO.getAge());
+        assertThat(foundUser.get().getAddressDTO().getCity()).isEqualTo(updatedUserDTO.getAddressDTO().getCity());
     }
 
     @Test

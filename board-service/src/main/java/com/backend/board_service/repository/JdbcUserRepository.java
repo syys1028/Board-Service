@@ -94,10 +94,17 @@ public class JdbcUserRepository implements UserRepository {
         return users.stream().findFirst();
     }
 
+    public void updateAddress(Address address) {
+        String sql = "UPDATE addresses SET city = ?, street = ?, zipcode = ? WHERE address_id = ?";
+        jdbcTemplate.update(sql, address.getCity(), address.getStreet(), address.getZipcode(), address.getAddress_id());
+    }
+
     @Override
     public void updateUser(Long id, User user) {
-        String sql = "UPDATE users SET pw = ?, age = ?, gender = ?, address_id = ? WHERE id = ?";
-        jdbcTemplate.update(sql, user.getPw(), user.getAge(), user.getGender().name(), user.getAddress().getAddress_id(), id);
+        updateAddress(user.getAddress());       // 주소 정보 업데이트
+
+        String sql = "UPDATE users SET pw = ?, age = ?, gender = ? WHERE id = ?";
+        jdbcTemplate.update(sql, user.getPw(), user.getAge(), user.getGender().name(), id);
     }
 
     @Override
