@@ -3,6 +3,7 @@ package com.backend.board_service.controller;
 import com.backend.board_service.dto.UserDTO;
 import com.backend.board_service.dto.UserRegisterDTO;
 import com.backend.board_service.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class UserController {
 
     // 1. 회원 가입 (POST /users)
     @PostMapping
-    public ResponseEntity<Long> registerUser(@RequestBody UserRegisterDTO userRegisterDTO) {
+    public ResponseEntity<Long> registerUser(@Valid @RequestBody UserRegisterDTO userRegisterDTO) {
         Long userId = userService.addUser(userRegisterDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(userId);
     }
@@ -32,12 +33,15 @@ public class UserController {
     @GetMapping("/{email}")
     public ResponseEntity<UserDTO> getUser(@PathVariable("email") String email) {
         Optional<UserDTO> user = userService.findUserByEmail(email);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build()); // 이거 자동으로 바꿔주는데 뭐지? ,,,
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("해당 이메일의 사용자가 존재하지 않습니다.");
+        }
+        return ResponseEntity.ok(user.get());
     }
 
     // 3. 회원 정보 수정 (PUT /users/{email})
     @PutMapping("/{email}")
-    public ResponseEntity<Void> updateUser(@PathVariable("email") String email, @RequestBody UserRegisterDTO userDTO) {
+    public ResponseEntity<Void> updateUser(@PathVariable("email") String email, @Valid @RequestBody UserRegisterDTO userDTO) {
         Long userId = userService.getUserIdByEmail(email);  // id(pk)가져와서 사용
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
