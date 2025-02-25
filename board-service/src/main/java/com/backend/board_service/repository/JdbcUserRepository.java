@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -73,8 +74,13 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findById(Long id) {
-        String sql = "SELECT * FROM users WHERE id = ?";
-        return jdbcTemplate.query(sql, userRowMapper(), id).stream().findFirst();
+        String sql = "SELECT u.*, a.address_id, a.city, a.street, a.zipcode " +
+                "FROM users u " +
+                "JOIN addresses a ON u.address_id = a.address_id " +
+                "WHERE u.id = ?";
+
+        List<User> users = jdbcTemplate.query(sql, userRowMapper(), id);
+        return users.stream().findFirst();
     }
 
     @Override
@@ -84,7 +90,8 @@ public class JdbcUserRepository implements UserRepository {
                 "JOIN addresses a ON u.address_id = a.address_id " +
                 "WHERE u.email = ?";
 
-        return jdbcTemplate.query(sql, userRowMapper(), email).stream().findFirst();
+        List<User> users = jdbcTemplate.query(sql, userRowMapper(), email);
+        return users.stream().findFirst();
     }
 
     @Override
@@ -105,7 +112,7 @@ public class JdbcUserRepository implements UserRepository {
                 rs.getString("pw"),
                 rs.getInt("age"),
                 Gender.valueOf(rs.getString("gender")),  // Enum 변환
-                rs.getTimestamp("createdAt").toLocalDateTime(),
+                rs.getTimestamp("createdAt") != null ? rs.getTimestamp("createdAt").toLocalDateTime() : null,
                 new Address(
                         rs.getLong("address_id"),
                         rs.getString("city"),

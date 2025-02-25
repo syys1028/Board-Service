@@ -59,12 +59,19 @@ public class UserService {
         }
 
         // 나중에 변경된 값만 반영하도록 수정, 그리고 어떤 값을 수정할 수 있도록 할건지 고려
-        LocalDateTime createdAt = existingUser.get().getCreatedAt(); // 기존 회원가입 시간 유지
+
+        LocalDateTime createdAt = existingUser.get().getCreatedAt(); // 기존 회원가입 시간 유지 (수정에 반영 x)
+        Address existingAddress = existingUser.get().getAddress(); // 기존 주소 유지
 
         User updatedUser = new User(
                 id, userDTO.getEmail(), userDTO.getPw(),
-                userDTO.getAge(), userDTO.getGender(), createdAt, Address.fromDTO(userDTO.getAddressDTO())
+                userDTO.getAge(), userDTO.getGender(), createdAt,
+                new Address(existingAddress.getAddress_id(),
+                        userDTO.getAddressDTO().getCity(),
+                        userDTO.getAddressDTO().getStreet(),
+                        userDTO.getAddressDTO().getZipcode())
         );
+
         jdbcUserRepository.updateUser(id, updatedUser);
         return true;
     }

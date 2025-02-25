@@ -25,7 +25,7 @@ class JdbcUserRepositoryTest {
 
     @Test
     void 회원_저장_및_조회() {
-        // Given
+        // given
         UserRegisterDTO userDTO = new UserRegisterDTO(
                 "aaa123@naver.com", "asdf1234!", 25, Gender.FEMALE, LocalDateTime.now(),
                 new AddressDTO("군산", "나운우회로 91", "54124")
@@ -34,11 +34,11 @@ class JdbcUserRepositoryTest {
         // DTO → User 변환
         User user = User.fromRegisterDTO(userDTO);
 
-        // When
+        // when
         User savedUser = userRepository.saveUser(user);
         Optional<User> foundUser = userRepository.findByEmail(savedUser.getEmail());
 
-        // Then
+        // then
         assertThat(foundUser).isPresent();  // 존재 확인
         assertThat(foundUser.get().getEmail()).isEqualTo(user.getEmail()); // 이메일
         assertThat(foundUser.get().getAge()).isEqualTo(user.getAge()); // 나이
@@ -47,7 +47,7 @@ class JdbcUserRepositoryTest {
 
     @Test
     void 회원_수정() {
-        // Given
+        // given
         UserRegisterDTO userDTO = new UserRegisterDTO(
                 "aaa123@naver.com", "asdf1234!", 25, Gender.FEMALE, LocalDateTime.now(),
                 new AddressDTO("군산", "나운우회로 91", "54124")
@@ -55,14 +55,14 @@ class JdbcUserRepositoryTest {
         User user = User.fromRegisterDTO(userDTO);
         User savedUser = userRepository.saveUser(user);
 
-        // When
+        // when
         User updatedUser = new User(
                 savedUser.getId(), savedUser.getEmail(), savedUser.getPw(),
                 30, savedUser.getGender(), savedUser.getCreatedAt(), savedUser.getAddress()
         );
         userRepository.updateUser(savedUser.getId(), updatedUser);
 
-        // Then
+        // then
         Optional<User> foundUser = userRepository.findByEmail(savedUser.getEmail());
         assertThat(foundUser).isPresent();
         assertThat(foundUser.get().getAge()).isEqualTo(30);
@@ -70,7 +70,7 @@ class JdbcUserRepositoryTest {
 
     @Test
     void 회원_삭제() {
-        // Given
+        // given
         UserRegisterDTO userDTO = new UserRegisterDTO(
                 "aaa123@naver.com", "asdf1234!", 25, Gender.FEMALE, LocalDateTime.now(),
                 new AddressDTO("군산", "나운우회로 91", "54124")
@@ -78,10 +78,10 @@ class JdbcUserRepositoryTest {
         User user = User.fromRegisterDTO(userDTO);
         User savedUser = userRepository.saveUser(user);
 
-        // When
+        // when
         userRepository.deleteUser(savedUser.getId());
 
-        // Then
+        // then
         Optional<User> foundUser = userRepository.findByEmail(savedUser.getEmail());
         assertThat(foundUser).isEmpty();
     }
