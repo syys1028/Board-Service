@@ -25,7 +25,7 @@ public class UserRegisterDTO {
     @NotBlank(message = "성별을 선택해주세요.")
     private Gender gender;                  // 성별
 
-    private LocalDateTime createdAt = LocalDateTime.now(); // 작성 시간
+    private LocalDateTime createdAt;        // 작성 시간
 
     @NotBlank(message = "주소를 입력해주세요.")
     private AddressDTO addressDTO;                // 주소

@@ -11,7 +11,7 @@ public class User {
     private String pw;                      // 사용자 비밀번호
     private int age;                        // 나이
     private Gender gender;                  // 성별
-    private LocalDateTime createdAt = LocalDateTime.now(); // 작성 시간
+    private LocalDateTime createdAt;        // 작성 시간
     private Address address;                // 주소
 
     public User(Long id, String email, String pw, int age, Gender gender, LocalDateTime createdAt, Address address) {

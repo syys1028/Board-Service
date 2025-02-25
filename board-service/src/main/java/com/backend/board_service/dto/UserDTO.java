@@ -9,8 +9,8 @@ public class UserDTO {
     private String email;                   // 사용자 이메일
     private int age;                        // 나이
     private Gender gender;                  // 성별
-    private LocalDateTime createdAt = LocalDateTime.now(); // 작성 시간
-    private AddressDTO addressDTO;                // 주소
+    private LocalDateTime createdAt;        // 작성 시간
+    private AddressDTO addressDTO;          // 주소
 
     public UserDTO(String email, int age, Gender gender, LocalDateTime createdAt, AddressDTO addressDTO) {
         this.email = email;

@@ -60,7 +60,6 @@ public class JdbcUserRepository implements UserRepository {
         params.put("pw", user.getPw());
         params.put("age", user.getAge());
         params.put("gender", user.getGender().name());
-        params.put("createdAt", user.getCreatedAt());
         params.put("address_id", savedAddress.getAddress_id());
 
         // 테이블 삽입 후 userID 가져와서 객체 반환
@@ -69,7 +68,13 @@ public class JdbcUserRepository implements UserRepository {
             throw new RuntimeException("유저 저장 실패");
         }
 
-        return new User(key.longValue(), user.getEmail(), user.getPw(), user.getAge(), user.getGender(), user.getCreatedAt(), savedAddress);
+        return new User(key.longValue(), user.getEmail(), user.getPw(), user.getAge(), user.getGender(), LocalDateTime.now(), savedAddress);
+    }
+
+    @Override
+    public Optional<User> findById(Long id) {
+        String sql = "SELECT * FROM users WHERE id = ?";
+        return jdbcTemplate.query(sql, userRowMapper(), id).stream().findFirst();
     }
 
     @Override

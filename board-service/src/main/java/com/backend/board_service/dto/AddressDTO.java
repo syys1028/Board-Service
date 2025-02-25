@@ -1,5 +1,7 @@
 package com.backend.board_service.dto;
 
+import com.backend.board_service.entity.Address;
+
 public class AddressDTO {
     private String city;
     private String street;
@@ -9,6 +11,11 @@ public class AddressDTO {
         this.city = city;
         this.street = street;
         this.zipcode = zipcode;
+    }
+
+    // Address → AddressDTO 변환 메서드
+    public static AddressDTO fromEntity(Address address) {
+        return new AddressDTO(address.getCity(), address.getStreet(), address.getZipcode());
     }
 
     public String getCity() {
