@@ -78,6 +78,13 @@ public class JdbcPostRepository implements PostRepository {
         jdbcTemplate.update(sql, id);
     }
 
+    // 6. 좋아요 업데이트
+    @Override
+    public void updatePostLike(Long id, Integer likes) {
+        String sql = "UPDATE posts SET likes = ? WHERE id = ?";
+        jdbcTemplate.update(sql, likes, id);
+    }
+
     // Mapper
     private RowMapper<Post> postRowMapper() {
         return (rs, rowNum) -> new Post(

@@ -30,13 +30,12 @@ public class PostService {
 
     // 2-1. 게시글 목록 조회
     public List<Post> findAllPosts() {
-        List<Post> posts = postRepository.findAll();
-        return posts;
+        return postRepository.findAll();
     }
 
     // 2-2. 게시글 상세 조회 (작성자 검색)
-    public Optional<PostDTO> findPostById(Long id) {
-        return postRepository.findByUserId(id)
+    public Optional<PostDTO> findPostById(Long userId) {
+        return postRepository.findByUserId(userId)
                 .map(post -> new PostDTO(
                         post.getTitle(),
                         post.getContents(),
@@ -57,6 +56,12 @@ public class PostService {
         Optional<Post> existingPost = postRepository.findByPostId(id);
         if (existingPost.isEmpty()) {
             throw new IllegalArgumentException("해당 ID의 게시물이 존재하지 않습니다.");
+        }
+
+        // 기존 데이터와 동일하면 업데이트 안 함
+        Post post = existingPost.get();
+        if (post.getTitle().equals(title) && post.getContents().equals(contents) && post.getLikes().equals(likes)) {
+            return false;
         }
 
         // 제목, 내용, 좋아요 수만 변경 가능 -> 나중에 좋아요 기능 따로 빼기
@@ -81,9 +86,9 @@ public class PostService {
         if (post.isEmpty()) {
             throw new IllegalArgumentException("해당 ID의 게시물이 존재하지 않습니다.");
         }
-
-        // 좋아요 반영 방법 생각하기 (이렇게 3개 동시에 하거나, 아니면 레파지토리에 LikeCount 업데이트 함수 추가)
-        postRepository.updatePost(id, post.get().getTitle(), post.get().getContents(), likes);
+        // 나중에 좋아요 증가, 감소 기능 등 따로 관리하기..
+        postRepository.updatePostLike(id, likes);  // <- 좋아요만 업데이트
         return true;
     }
+
 }

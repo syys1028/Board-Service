@@ -97,4 +97,21 @@ class JdbcPostRepositoryTest {
         Optional<Post> foundPost = postRepository.findByUserId(userId);
         assertThat(foundPost).isEmpty();
     }
+
+    @Test
+    void 좋아요_업데이트() {
+        // given
+        PostDTO postDTO = new PostDTO("테스트 제목", "테스트 내용", userId, LocalDateTime.now(), 0);
+        Post post = Post.fromRegisterDTO(postDTO);
+        Post savedPost = postRepository.savePost(post);
+
+        // when
+        Integer likeCount = 1;
+        postRepository.updatePostLike(savedPost.getId(), likeCount);
+
+        // then
+        Optional<Post> foundPost = postRepository.findByUserId(savedPost.getUserID());
+        assertThat(foundPost).isPresent();
+        assertThat(foundPost.get().getLikes()).isEqualTo(1);
+    }
 }
