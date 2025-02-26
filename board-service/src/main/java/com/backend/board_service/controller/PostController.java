@@ -2,15 +2,13 @@ package com.backend.board_service.controller;
 
 import com.backend.board_service.dto.PostDTO;
 import com.backend.board_service.dto.PostUpdateDTO;
-import com.backend.board_service.dto.UserDTO;
-import com.backend.board_service.entity.Post;
+import com.backend.board_service.exception.PostNotFoundException;
 import com.backend.board_service.service.PostService;
 import com.backend.board_service.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,12 +45,9 @@ public class PostController {
     // 3-1. 게시글 상세 조회 - PostId (GET /posts/{userId})
     @GetMapping("/{id}")
     public ResponseEntity<PostDTO> getUserPost(@PathVariable("id") Long postId) {
-        Optional<PostDTO> postDTO = postService.findPostByPostId(postId);
-        if (postDTO.isEmpty()) {
-            throw new IllegalArgumentException("해당 게시물이 존재하지 않습니다.");
-        }
-        return postDTO.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        PostDTO postDTO = postService.findPostByPostId(postId)
+                .orElseThrow(() -> new PostNotFoundException("해당 게시물이 존재하지 않습니다."));
+        return ResponseEntity.ok(postDTO);
     }
 
     // 3-2. 게시글 상세 조회 - UserId (GET /posts/{userId})
@@ -60,7 +55,7 @@ public class PostController {
     public ResponseEntity<List<PostDTO>> getUserPost(@PathVariable("email") String email) {
         Long userId = userService.getUserIdByEmail(email);
         if (userId == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            throw new IllegalArgumentException("해당 이메일의 사용자가 존재하지 않습니다.");
         }
 
         List<PostDTO> postDTOs = postService.findPostByUserId(userId).stream()

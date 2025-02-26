@@ -2,12 +2,12 @@ package com.backend.board_service.controller;
 
 import com.backend.board_service.dto.UserDTO;
 import com.backend.board_service.dto.UserRegisterDTO;
+import com.backend.board_service.exception.UserNotFoundException;
 import com.backend.board_service.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -32,11 +32,9 @@ public class UserController {
     // 2. 회원 조회 (GET /users/{email})
     @GetMapping("/{email}")
     public ResponseEntity<UserDTO> getUser(@PathVariable("email") String email) {
-        Optional<UserDTO> user = userService.findUserByEmail(email);
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException("해당 이메일의 사용자가 존재하지 않습니다.");
-        }
-        return ResponseEntity.ok(user.get());
+        UserDTO user = userService.findUserByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("해당 이메일의 사용자가 존재하지 않습니다."));
+        return ResponseEntity.ok(user);
     }
 
     // 3. 회원 정보 수정 (PUT /users/{email})
