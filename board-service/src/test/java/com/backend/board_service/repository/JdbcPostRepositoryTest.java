@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,13 +49,32 @@ class JdbcPostRepositoryTest {
 
         // when
         Post savedPost = postRepository.savePost(post);
-        Optional<Post> foundPost = postRepository.findByUserId(savedPost.getUserID());
+        Optional<Post> foundPost = postRepository.findByPostId(savedPost.getId());
 
         // then
         assertThat(foundPost).isPresent();
         assertThat(foundPost.get().getUserID()).isEqualTo(post.getUserID());
         assertThat(foundPost.get().getTitle()).isEqualTo(post.getTitle());
         assertThat(foundPost.get().getContents()).isEqualTo(post.getContents());
+    }
+
+    @Test
+    void 게시글_사용자_상세조회() {
+        // given
+        PostDTO postDTO = new PostDTO("테스트 제목", "테스트 내용", userId, LocalDateTime.now(), 0);
+        PostDTO postDTO2 = new PostDTO("테스트 제목", "테스트 내용", userId, LocalDateTime.now(), 0);
+
+        // DTO -> Post 변환
+        Post post = Post.fromRegisterDTO(postDTO);
+        Post post2 = Post.fromRegisterDTO(postDTO2);
+
+        // when
+        postRepository.savePost(post);
+        postRepository.savePost(post2);
+        List<Post> foundPost = postRepository.findByUserId(userId);
+
+        // then
+        assertThat(foundPost.size()).isEqualTo(2);
     }
 
     @Test
@@ -75,7 +95,7 @@ class JdbcPostRepositoryTest {
         postRepository.updatePost(savedPost.getId(), title, contents, likeCount);
 
         // then
-        Optional<Post> foundPost = postRepository.findByUserId(savedPost.getUserID());
+        Optional<Post> foundPost = postRepository.findByPostId(savedPost.getId());
         assertThat(foundPost).isPresent();
         assertThat(foundPost.get().getTitle()).isEqualTo("수정 테스트 제목");
         assertThat(foundPost.get().getContents()).isEqualTo("수정 테스트 내용");
@@ -93,7 +113,7 @@ class JdbcPostRepositoryTest {
         postRepository.deletePost(savedPost.getId());
 
         // then
-        Optional<Post> foundPost = postRepository.findByUserId(userId);
+        Optional<Post> foundPost = postRepository.findByPostId(savedPost.getId());
         assertThat(foundPost).isEmpty();
     }
 
@@ -109,7 +129,7 @@ class JdbcPostRepositoryTest {
         postRepository.updatePostLike(savedPost.getId(), likeCount);
 
         // then
-        Optional<Post> foundPost = postRepository.findByUserId(savedPost.getUserID());
+        Optional<Post> foundPost = postRepository.findByPostId(savedPost.getId());
         assertThat(foundPost).isPresent();
         assertThat(foundPost.get().getLikes()).isEqualTo(1);
     }

@@ -26,14 +26,14 @@ public class PostService {
         return postRepository.savePost(post).getId();
     }
 
-    // 2-1. 게시글 목록 조회
+    // 2. 게시글 목록 조회
     public List<Post> findAllPosts() {
         return postRepository.findAll();
     }
 
-    // 2-2. 게시글 상세 조회 (작성자 검색)
-    public Optional<PostDTO> findPostById(Long userId) {
-        return postRepository.findByUserId(userId)
+    // 3-1. 게시글 상세 조회 (게시글 검색)
+    public Optional<PostDTO> findPostByPostId(Long postId) {
+        return postRepository.findByPostId(postId)
                 .map(post -> new PostDTO(
                         post.getTitle(),
                         post.getContents(),
@@ -43,10 +43,9 @@ public class PostService {
                 ));
     }
 
-    // 2-3. 게시글 id로 회원 id 가져오기
-    public Long getUserIdByPostId(Long id) {
-        Optional<Post> post = postRepository.findByPostId(id);
-        return post.map(Post::getUserID).orElse(null);
+    // 3-2. 게시글 상세 조회 (작성자 검색)
+    public List<Post> findPostByUserId(Long userId) {
+        return postRepository.findByUserId(userId);
     }
 
     // 4. 게시글 수정
@@ -78,7 +77,7 @@ public class PostService {
         return true;
     }
 
-    // 6. 좋아요 수 업데이트
+    // 6. 좋아요 수 업데이트 -> 아직 실제 사용 X
     public boolean updatePostLike(Long id, Integer likes) {
         Optional<Post> post = postRepository.findByPostId(id);
         if (post.isEmpty()) {

@@ -50,8 +50,8 @@ class PostServiceTest {
     @Test
     void 게시글_작성_성공() {
         // given & when
-        postService.addPost(postDTO);
-        Optional<PostDTO> foundPost = postService.findPostById(postDTO.getUserID());
+        Long postId = postService.addPost(postDTO);
+        Optional<PostDTO> foundPost = postService.findPostByPostId(postId);
 
         // then
         assertThat(foundPost).isPresent();
@@ -75,9 +75,32 @@ class PostServiceTest {
 
     @Test
     void 게시글_작성자_상세_조회_성공() {
-        // given & when
+        // given
         postService.addPost(postDTO);
-        Optional<PostDTO> foundPost = postService.findPostById(postDTO.getUserID());
+        PostDTO postDTO1 = new PostDTO("테스트 제목2", "테스트 내용2", userId, LocalDateTime.now(), 0);
+        postService.addPost(postDTO1);
+
+        // new user & new post
+        UserRegisterDTO testUserDTO = new UserRegisterDTO(
+                "aaaaa@email.com", "1234password", 25, Gender.MALE, LocalDateTime.now(),
+                new AddressDTO("서울", "강남대로 20", "12345")
+        );
+        Long userId2 = userService.addUser(testUserDTO);
+        PostDTO postDTO2 = new PostDTO("테스트 제목2", "테스트 내용2", userId2, LocalDateTime.now(), 0);
+        postService.addPost(postDTO2);
+
+        // when
+        List<Post> result = postService.findPostByUserId(postDTO.getUserID());
+
+        // then
+        assertThat(result.size()).isEqualTo(2);
+    }
+
+    @Test
+    void 게시글_상세_조회_성공() {
+        // given & when
+        Long postId = postService.addPost(postDTO);
+        Optional<PostDTO> foundPost = postService.findPostByPostId(postId);
 
         // then
         assertThat(foundPost).isPresent();
@@ -96,7 +119,7 @@ class PostServiceTest {
 
         // when
         boolean isUpdate = postService.updatePost(postId, title, contents, likeCount);
-        Optional<PostDTO> foundPost = postService.findPostById(postDTO.getUserID());
+        Optional<PostDTO> foundPost = postService.findPostByPostId(postId);
 
         // then
         assertThat(isUpdate).isTrue();
@@ -113,7 +136,7 @@ class PostServiceTest {
 
         // when
         boolean isDelete = postService.deletePost(postId);
-        Optional<PostDTO> foundPost = postService.findPostById(postDTO.getUserID());
+        Optional<PostDTO> foundPost = postService.findPostByPostId(postId);
 
         // then
         assertThat(isDelete).isTrue();
@@ -128,7 +151,7 @@ class PostServiceTest {
 
         // when
         boolean isUpdate = postService.updatePostLike(postId, likeCount);
-        Optional<PostDTO> foundPost = postService.findPostById(postDTO.getUserID());
+        Optional<PostDTO> foundPost = postService.findPostByPostId(postId);
 
         // then
         assertThat(isUpdate).isTrue();

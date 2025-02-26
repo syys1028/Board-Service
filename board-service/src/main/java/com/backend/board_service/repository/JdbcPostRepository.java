@@ -59,10 +59,9 @@ public class JdbcPostRepository implements PostRepository {
     }
 
     @Override
-    public Optional<Post> findByUserId(Long userId) {
+    public List<Post> findByUserId(Long userId) {
         String sql = "SELECT * FROM posts WHERE user_id = ?";
-        List<Post> posts = jdbcTemplate.query(sql, postRowMapper(), userId);
-        return posts.stream().findFirst();
+        return jdbcTemplate.query(sql, postRowMapper(), userId);
     }
 
     // 4. 게시글 수정
