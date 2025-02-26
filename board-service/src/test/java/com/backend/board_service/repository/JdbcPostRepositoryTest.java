@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -27,7 +26,7 @@ class JdbcPostRepositoryTest {
 
     @Autowired
     private UserService userService;
-    Long userId;
+    private Long userId;
 
     @BeforeEach
     void setUp() {

@@ -35,11 +35,12 @@ public class JdbcPostRepository implements PostRepository {
         params.put("title", post.getTitle());
         params.put("contents", post.getContents());
         params.put("user_id", post.getUserID());
+        params.put("createdAt", post.getCreatedAt());
         params.put("likes", post.getLikes());
 
         // 테이블 삽입 후 postID 가져와서 객체 반환
         Number key = insert.executeAndReturnKey(new MapSqlParameterSource(params));
-        return new Post(key.longValue(), post.getTitle(), post.getContents(), post.getUserID(), LocalDateTime.now(), post.getLikes());
+        return new Post(key.longValue(), post.getTitle(), post.getContents(), post.getUserID(), post.getCreatedAt(), post.getLikes());
     }
 
     // 2. 게시글 목록 조회

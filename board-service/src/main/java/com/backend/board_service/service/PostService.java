@@ -2,11 +2,11 @@ package com.backend.board_service.service;
 
 import com.backend.board_service.dto.PostDTO;
 import com.backend.board_service.entity.Post;
-import com.backend.board_service.entity.User;
 import com.backend.board_service.repository.PostRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,16 +14,14 @@ import java.util.Optional;
 @Transactional
 public class PostService {
     private final PostRepository postRepository;
-    private final UserService userService;
 
-    public PostService(PostRepository postRepository, UserService userService) {
+    public PostService(PostRepository postRepository) {
         this.postRepository = postRepository;
-        this.userService = userService;
     }
 
     // 1. 게시글 작성
     public Long addPost(PostDTO dto) {
-        PostDTO postDTO = new PostDTO(dto.getTitle(), dto.getContents(), dto.getUserID(), dto.getCreatedAt(), dto.getLikes());
+        PostDTO postDTO = new PostDTO(dto.getTitle(), dto.getContents(), dto.getUserID(), LocalDateTime.now(), dto.getLikes());
         Post post = Post.fromRegisterDTO(postDTO);
         return postRepository.savePost(post).getId();
     }

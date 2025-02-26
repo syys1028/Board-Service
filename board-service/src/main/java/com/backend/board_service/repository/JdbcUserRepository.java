@@ -61,6 +61,7 @@ public class JdbcUserRepository implements UserRepository {
         params.put("pw", user.getPw());
         params.put("age", user.getAge());
         params.put("gender", user.getGender().name());
+        params.put("createdAt", user.getCreatedAt());
         params.put("address_id", savedAddress.getAddress_id());
 
         // 테이블 삽입 후 userID 가져와서 객체 반환
@@ -69,7 +70,7 @@ public class JdbcUserRepository implements UserRepository {
             throw new RuntimeException("유저 저장 실패");
         }
 
-        return new User(key.longValue(), user.getEmail(), user.getPw(), user.getAge(), user.getGender(), LocalDateTime.now(), savedAddress);
+        return new User(key.longValue(), user.getEmail(), user.getPw(), user.getAge(), user.getGender(), user.getCreatedAt(), savedAddress);
     }
 
     // 2-1. 회원 정보 조회 (아이디)

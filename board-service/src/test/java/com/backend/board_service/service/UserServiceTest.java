@@ -4,8 +4,7 @@ import com.backend.board_service.dto.AddressDTO;
 import com.backend.board_service.dto.UserDTO;
 import com.backend.board_service.dto.UserRegisterDTO;
 import com.backend.board_service.entity.Gender;
-import com.backend.board_service.entity.User;
-import com.backend.board_service.repository.JdbcUserRepository;
+import com.backend.board_service.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ class UserServiceTest {
     UserService userService;
 
     @Autowired
-    JdbcUserRepository jdbcUserRepository;
+    UserRepository userRepository;
 
     private UserRegisterDTO testUserDTO;
 
