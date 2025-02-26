@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Repository
 public class JdbcUserRepository implements UserRepository {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public JdbcUserRepository(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -46,7 +46,7 @@ public class JdbcUserRepository implements UserRepository {
         return new Address(addressId, address.getCity(), address.getStreet(), address.getZipcode());
     }
 
-    // 1. 유저 저장
+    // 1. 회원 가입
     @Override
     public User saveUser(User user) {
         SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate);
@@ -72,6 +72,7 @@ public class JdbcUserRepository implements UserRepository {
         return new User(key.longValue(), user.getEmail(), user.getPw(), user.getAge(), user.getGender(), LocalDateTime.now(), savedAddress);
     }
 
+    // 2-1. 회원 정보 조회 (아이디)
     @Override
     public Optional<User> findById(Long id) {
         String sql = "SELECT u.*, a.address_id, a.city, a.street, a.zipcode " +
@@ -83,6 +84,7 @@ public class JdbcUserRepository implements UserRepository {
         return users.stream().findFirst();
     }
 
+    // 2-2. 회원 정보 조회 (이메일)
     @Override
     public Optional<User> findByEmail(String email) {
         String sql = "SELECT u.*, a.address_id, a.city, a.street, a.zipcode " +
@@ -94,11 +96,13 @@ public class JdbcUserRepository implements UserRepository {
         return users.stream().findFirst();
     }
 
+    // 3-0. 회원 정보 수정 (주소)
     public void updateAddress(Address address) {
         String sql = "UPDATE addresses SET city = ?, street = ?, zipcode = ? WHERE address_id = ?";
         jdbcTemplate.update(sql, address.getCity(), address.getStreet(), address.getZipcode(), address.getAddress_id());
     }
 
+    // 3. 회원 정보 수정
     @Override
     public void updateUser(Long id, User user) {
         updateAddress(user.getAddress());       // 주소 정보 업데이트
@@ -107,11 +111,13 @@ public class JdbcUserRepository implements UserRepository {
         jdbcTemplate.update(sql, user.getPw(), user.getAge(), user.getGender().name(), id);
     }
 
+    // 4. 회원 삭제
     @Override
     public void deleteUser(Long id) {
         jdbcTemplate.update("DELETE FROM users WHERE id = ?", id);
     }
 
+    // Mapper
     private RowMapper<User> userRowMapper() {
         return (rs, rowNum) -> new User(
                 rs.getLong("id"),
