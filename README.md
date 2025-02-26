@@ -4,10 +4,11 @@
 - **📅 목표 기간:** 6개월 (각 실습은 2~3주 내 완성)
 - **📌 주요 키워드:** Spring Boot, JPA, AWS, Nginx, Docker, CI/CD
 
+<개발 회고기록> : https://astonishing-print-3c1.notion.site/1998e4df1c72800f8148ce5a06c719e9
+
 ---
 
 ## **✅ 1️⃣ Spring 기초 & REST API 개발 (2주)**
-<개발 기록> : https://astonishing-print-3c1.notion.site/1998e4df1c72800f8148ce5a06c719e9
 
 📅 **목표 기한:** 2025년 2월 27일
 
