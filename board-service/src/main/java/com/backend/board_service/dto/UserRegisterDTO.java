@@ -2,10 +2,7 @@ package com.backend.board_service.dto;
 
 import com.backend.board_service.entity.Address;
 import com.backend.board_service.entity.Gender;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 
@@ -22,13 +19,13 @@ public class UserRegisterDTO {
     @Min(value = 0, message = "나이를 선택해주세요.")
     private int age;                        // 나이
 
-    @NotBlank(message = "성별을 선택해주세요.")
+    @NotNull(message = "성별을 선택해주세요.")
     private Gender gender;                  // 성별
 
     private LocalDateTime createdAt;        // 작성 시간
 
-    @NotBlank(message = "주소를 입력해주세요.")
-    private AddressDTO addressDTO;                // 주소
+    @NotNull(message = "주소를 입력해주세요.")
+    private AddressDTO addressDTO;          // 주소
 
     public UserRegisterDTO(String email, String pw, int age, Gender gender, LocalDateTime createdAt, AddressDTO addressDTO) {
         this.email = email;
