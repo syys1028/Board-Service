@@ -2,6 +2,7 @@ package com.backend.board_service.service;
 
 import com.backend.board_service.dto.PostDTO;
 import com.backend.board_service.entity.Post;
+import com.backend.board_service.exception.UserNotFoundException;
 import com.backend.board_service.repository.PostRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +15,20 @@ import java.util.Optional;
 @Transactional
 public class PostService {
     private final PostRepository postRepository;
+    private final UserService userService;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, UserService userService) {
         this.postRepository = postRepository;
+        this.userService = userService;
     }
 
     // 1. 게시글 작성
     public Long addPost(PostDTO dto) {
+        // 사용자가 존재하는지 먼저 확인
+        if (!userService.existsById(dto.getUserID())) {
+            throw new UserNotFoundException("해당 사용자가 존재하지 않습니다.");
+        }
+
         PostDTO postDTO = new PostDTO(dto.getTitle(), dto.getContents(), dto.getUserID(), LocalDateTime.now(), dto.getLikes());
         Post post = Post.fromRegisterDTO(postDTO);
         return postRepository.savePost(post).getId();

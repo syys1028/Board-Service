@@ -118,6 +118,14 @@ public class JdbcUserRepository implements UserRepository {
         jdbcTemplate.update("DELETE FROM users WHERE id = ?", id);
     }
 
+    // 5. 아이디 존재 확인
+    @Override
+    public boolean existsById(Long id) {
+        String sql = "SELECT COUNT(*) FROM users WHERE id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return count != null && count > 0;
+    }
+
     // Mapper
     private RowMapper<User> userRowMapper() {
         return (rs, rowNum) -> new User(

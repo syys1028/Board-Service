@@ -29,6 +29,11 @@ public class UserService {
                 });
     }
 
+    // 0. 아이디 확인
+    public boolean existsById(Long userId) {
+        return userRepository.existsById(userId);
+    }
+
     // 1. 회원 가입
     public Long addUser(UserRegisterDTO dto) {
         validateDuplicateEmail(dto.getEmail());
@@ -102,4 +107,5 @@ public class UserService {
         userRepository.deleteUser(id);
         return true;
     }
+
 }

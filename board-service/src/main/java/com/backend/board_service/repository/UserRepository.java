@@ -10,4 +10,5 @@ public interface UserRepository {
     Optional<User> findByEmail(String email);       // 2-2. 회원 정보 조회 (이메일)
     void updateUser(Long id, User user);            // 3. 회원 정보 수정
     void deleteUser(Long id);                       // 4. 회원 삭제
+    boolean existsById(Long id);                    // 5. 아이디 존재 확인
 }
