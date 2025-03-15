@@ -3,8 +3,11 @@ package com.backend.board_service.service;
 import com.backend.board_service.dto.AddressDTO;
 import com.backend.board_service.dto.UserDTO;
 import com.backend.board_service.dto.UserRegisterDTO;
+import com.backend.board_service.dto.UserUpdateDTO;
 import com.backend.board_service.entity.Address;
+import com.backend.board_service.entity.Gender;
 import com.backend.board_service.entity.User;
+import com.backend.board_service.exception.NoChangesException;
 import com.backend.board_service.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,25 +77,44 @@ public class UserService {
     }
 
     // 3. 회원 정보 수정
-    public boolean updateUser(Long id, UserRegisterDTO userDTO) {
+    public boolean updateUser(Long id, UserUpdateDTO userUpdateDTO) {
         Optional<User> existingUser = userRepository.findById(id);
         if (existingUser.isEmpty()) {
             throw new IllegalArgumentException("해당 ID의 사용자가 존재하지 않습니다.");
         }
 
-        // 나중에 변경된 값만 반영하도록 수정, 그리고 어떤 값을 수정할 수 있도록 할건지 고려 (이메일 x)
+        User user = existingUser.get();
 
-        LocalDateTime createdAt = existingUser.get().getCreatedAt(); // 기존 회원가입 시간 유지 (수정에 반영 x)
-        Address existingAddress = existingUser.get().getAddress(); // 기존 주소 유지
+        // 주소 업데이트: 새로운 주소가 주어진 경우에만 변경 (기존 주소를 기본값으로 사용)
+        Address updatedAddress = user.getAddress();
+        if (userUpdateDTO.getAddressDTO() != null) {
+            AddressDTO addressDTO = userUpdateDTO.getAddressDTO();
+            Address existingAddress = user.getAddress();
+            if (!addressDTO.getCity().equals(existingAddress.getCity()) ||
+                    !addressDTO.getStreet().equals(existingAddress.getStreet()) ||
+                    !addressDTO.getZipcode().equals(existingAddress.getZipcode())) {
 
-        User updatedUser = new User(
-                id, userDTO.getEmail(), userDTO.getPw(),
-                userDTO.getAge(), userDTO.getGender(), createdAt,
-                new Address(existingAddress.getAddress_id(),
-                        userDTO.getAddressDTO().getCity(),
-                        userDTO.getAddressDTO().getStreet(),
-                        userDTO.getAddressDTO().getZipcode())
-        );
+                updatedAddress = Address.builder()
+                        .address_id(existingAddress.getAddress_id())
+                        .city(addressDTO.getCity())
+                        .street(addressDTO.getStreet())
+                        .zipcode(addressDTO.getZipcode())
+                        .build();
+            }
+        }
+
+        // 변경된 값만 반영하여 새 User 객체 생성 (setter 없이, toBuilder() 활용)
+        User updatedUser = user.toBuilder()
+                .pw(userUpdateDTO.getPw() != null ? userUpdateDTO.getPw() : user.getPw())
+                .age(userUpdateDTO.getAge() != null ? userUpdateDTO.getAge() : user.getAge())
+                .gender(userUpdateDTO.getGender() != null ? userUpdateDTO.getGender() : user.getGender())
+                .address(updatedAddress)
+                .build();
+
+
+        if (user.equals(updatedUser)) {
+            throw new NoChangesException("변경된 사항이 없습니다.");
+        }
 
         userRepository.updateUser(id, updatedUser);
         return true;

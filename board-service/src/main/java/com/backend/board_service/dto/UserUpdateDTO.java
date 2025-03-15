@@ -9,17 +9,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor @AllArgsConstructor
 public class UserUpdateDTO {
     @NotBlank(message = "비밀번호를 입력해주세요.")
     private String pw;                      // 사용자 비밀번호
 
     @Min(value = 0, message = "나이를 선택해주세요.")
-    private int age;                        // 나이
+    private Integer age;                        // 나이
 
-    @NotNull(message = "성별을 선택해주세요.")
     private Gender gender;                  // 성별
 
-    @NotNull(message = "주소를 입력해주세요.")
     private AddressDTO addressDTO;          // 주소
 }

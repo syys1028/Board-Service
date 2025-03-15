@@ -108,7 +108,7 @@ public class JdbcUserRepository implements UserRepository {
     public void updateUser(Long id, User user) {
         updateAddress(user.getAddress());       // 주소 정보 업데이트
 
-        String sql = "UPDATE users SET pw = ?, age = ?, gender = ? WHERE id = ?";
+        String sql = "UPDATE users SET pw = COALESCE(?, pw), age = COALESCE(?, age), gender = COALESCE(?, gender) WHERE id = ?";
         jdbcTemplate.update(sql, user.getPw(), user.getAge(), user.getGender().name(), id);
     }
 

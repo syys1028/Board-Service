@@ -5,12 +5,13 @@ import com.backend.board_service.entity.Gender;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor @AllArgsConstructor
 public class UserRegisterDTO {
-
     @NotBlank(message = "이메일을 입력해주세요.")
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message = "올바른 이메일 형식이 아닙니다.")
     private String email;                   // 사용자 이메일

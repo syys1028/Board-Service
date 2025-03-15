@@ -3,9 +3,10 @@ package com.backend.board_service.dto;
 import com.backend.board_service.entity.Address;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor @AllArgsConstructor
 public class AddressDTO {
     private String city;
     private String street;

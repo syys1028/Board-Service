@@ -2,6 +2,7 @@ package com.backend.board_service.controller;
 
 import com.backend.board_service.dto.UserDTO;
 import com.backend.board_service.dto.UserRegisterDTO;
+import com.backend.board_service.dto.UserUpdateDTO;
 import com.backend.board_service.exception.UserNotFoundException;
 import com.backend.board_service.service.UserService;
 import jakarta.validation.Valid;
@@ -39,13 +40,13 @@ public class UserController {
 
     // 3. 회원 정보 수정 (PUT /users/{email})
     @PutMapping("/{email}")
-    public ResponseEntity<Void> updateUser(@PathVariable("email") String email, @Valid @RequestBody UserRegisterDTO userDTO) {
+    public ResponseEntity<Void> updateUser(@PathVariable("email") String email, @Valid @RequestBody UserUpdateDTO userUpdateDTO) {
         Long userId = userService.getUserIdByEmail(email);  // id(pk)가져와서 사용
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        boolean updated = userService.updateUser(userId, userDTO);
+        boolean updated = userService.updateUser(userId, userUpdateDTO);
         if (updated) {
             return ResponseEntity.ok().build();
         }

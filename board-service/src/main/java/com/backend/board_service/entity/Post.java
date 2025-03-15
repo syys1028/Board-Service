@@ -2,9 +2,17 @@ package com.backend.board_service.entity;
 
 import com.backend.board_service.dto.PostDTO;
 import com.backend.board_service.dto.UserRegisterDTO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Post {
     private Long id;                   // 게시글 ID
     private String title;              // 제목
