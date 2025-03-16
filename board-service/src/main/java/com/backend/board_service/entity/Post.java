@@ -29,7 +29,7 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;               // 작성자 ID (User 테이블의 ID)
+    private User user;                 // 작성자 ID (User 테이블의 ID)
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;   // 작성 시간

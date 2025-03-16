@@ -19,7 +19,7 @@ import java.util.List;
 @Table(name = "users")
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;                        // 게시글 ID
+    private Long id;                        // 사용자 ID
 
     @Column(nullable = false, unique = true)
     private String email;                   // 사용자 이메일
