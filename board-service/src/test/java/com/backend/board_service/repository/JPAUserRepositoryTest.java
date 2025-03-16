@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class JdbcUserRepositoryTest {
+class JPAUserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -58,7 +58,7 @@ class JdbcUserRepositoryTest {
         // when
         User updatedUser = new User(
                 savedUser.getId(), savedUser.getEmail(), savedUser.getPw(),
-                30, savedUser.getGender(), savedUser.getCreatedAt(), savedUser.getAddress()
+                30, savedUser.getGender(), savedUser.getCreatedAt(), savedUser.getAddress(), null
         );
         userRepository.updateUser(savedUser.getId(), updatedUser);
 
