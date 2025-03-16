@@ -6,6 +6,7 @@ import com.backend.board_service.exception.PostNotFoundException;
 import com.backend.board_service.service.PostService;
 import com.backend.board_service.service.UserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,15 +17,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")
+@RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
     private final UserService userService;
-
-    @Autowired
-    public PostController(PostService postService, UserService userService) {
-        this.postService = postService;
-        this.userService = userService;
-    }
 
     // 1. 게시글 작성 (POST /posts)
     @PostMapping

@@ -9,6 +9,7 @@ import com.backend.board_service.entity.Gender;
 import com.backend.board_service.entity.User;
 import com.backend.board_service.exception.NoChangesException;
 import com.backend.board_service.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +18,9 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     // 0. 이메일 중복 확인
     private void validateDuplicateEmail(String email) {

@@ -4,6 +4,7 @@ import com.backend.board_service.dto.PostDTO;
 import com.backend.board_service.entity.Post;
 import com.backend.board_service.exception.UserNotFoundException;
 import com.backend.board_service.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,14 +14,10 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
     private final UserService userService;
-
-    public PostService(PostRepository postRepository, UserService userService) {
-        this.postRepository = postRepository;
-        this.userService = userService;
-    }
 
     // 1. 게시글 작성
     public Long addPost(PostDTO dto) {

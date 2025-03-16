@@ -6,6 +6,7 @@ import com.backend.board_service.dto.UserUpdateDTO;
 import com.backend.board_service.exception.UserNotFoundException;
 import com.backend.board_service.service.UserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +16,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     // 1. 회원 가입 (POST /users)
     @PostMapping
