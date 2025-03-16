@@ -114,7 +114,7 @@ public class UserService {
             throw new NoChangesException("변경된 사항이 없습니다.");
         }
 
-        userRepository.updateUser(id, updatedUser);
+        userRepository.saveUser(updatedUser);
         return true;
     }
 
