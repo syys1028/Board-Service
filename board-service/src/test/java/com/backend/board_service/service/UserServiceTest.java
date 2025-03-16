@@ -3,6 +3,7 @@ package com.backend.board_service.service;
 import com.backend.board_service.dto.AddressDTO;
 import com.backend.board_service.dto.UserDTO;
 import com.backend.board_service.dto.UserRegisterDTO;
+import com.backend.board_service.dto.UserUpdateDTO;
 import com.backend.board_service.entity.Gender;
 import com.backend.board_service.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,26 +60,26 @@ class UserServiceTest {
         assertThat(foundUser.get().getAddressDTO().getCity()).isEqualTo(testUserDTO.getAddressDTO().getCity()); // 주소의 도시
     }
 
-//    @Test
-//    void 회원_수정_성공() {
-//        // given
-//        Long userId = userService.addUser(testUserDTO);
-//        UserRegisterDTO updatedUserDTO = new UserRegisterDTO(
-//                "aaa123@naver.com", "asdf1234!", 30, Gender.FEMALE, LocalDateTime.now(),
-//                new AddressDTO("서울", "강남대로 1", "12345")
-//        );
-//
-//        // when
-//        boolean isUpdate = userService.updateUser(userId, updatedUserDTO);
-//        Optional<UserDTO> foundUser = userService.findUserById(userId);
-//
-//        // then
-//        assertThat(isUpdate).isTrue();
-//        assertThat(foundUser).isPresent();
-//        assertThat(foundUser.get().getEmail()).isEqualTo(updatedUserDTO.getEmail());
-//        assertThat(foundUser.get().getAge()).isEqualTo(updatedUserDTO.getAge());
-//        assertThat(foundUser.get().getAddressDTO().getCity()).isEqualTo(updatedUserDTO.getAddressDTO().getCity());
-//    }
+    @Test
+    void 회원_수정_성공() {
+        // given
+        Long userId = userService.addUser(testUserDTO);
+        UserUpdateDTO updatedUserDTO = new UserUpdateDTO(
+                "asdf1234!", null, Gender.FEMALE,
+                new AddressDTO("서울", "강남대로 1", "12345")
+        );
+
+        // when
+        boolean isUpdate = userService.updateUser(userId, updatedUserDTO);
+        Optional<UserDTO> foundUser = userService.findUserById(userId);
+
+        // then
+        assertThat(isUpdate).isTrue();
+        assertThat(foundUser).isPresent();
+        assertThat(foundUser.get().getEmail()).isEqualTo(testUserDTO.getEmail());
+        assertThat(foundUser.get().getAge()).isEqualTo(25);
+        assertThat(foundUser.get().getAddressDTO().getCity()).isEqualTo(updatedUserDTO.getAddressDTO().getCity());
+    }
 
     @Test
     void 회원_삭제_성공() {
