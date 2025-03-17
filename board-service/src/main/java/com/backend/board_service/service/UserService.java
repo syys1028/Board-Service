@@ -8,6 +8,7 @@ import com.backend.board_service.entity.Address;
 import com.backend.board_service.entity.Gender;
 import com.backend.board_service.entity.User;
 import com.backend.board_service.exception.NoChangesException;
+import com.backend.board_service.repository.JPAUserRepository;
 import com.backend.board_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepository userRepository;
+    private final JPAUserRepository userRepository;
 
     // 0. 이메일 중복 확인
     private void validateDuplicateEmail(String email) {

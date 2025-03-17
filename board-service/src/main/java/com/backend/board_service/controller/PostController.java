@@ -33,7 +33,7 @@ public class PostController {
     @GetMapping
     public ResponseEntity<List<PostDTO>> getAllPosts() {
         List<PostDTO> postDTOs = postService.findAllPosts().stream()
-                .map(post -> new PostDTO(post.getTitle(), post.getContents(), post.getUserID(), post.getCreatedAt(), post.getLikes()))
+                .map(post -> new PostDTO(post.getTitle(), post.getContents(), post.getUser().getId(), post.getCreatedAt(), post.getLikes()))
                 .toList();
         return ResponseEntity.ok(postDTOs);
     }
@@ -55,7 +55,7 @@ public class PostController {
         }
 
         List<PostDTO> postDTOs = postService.findPostByUserId(userId).stream()
-                .map(post -> new PostDTO(post.getTitle(), post.getContents(), post.getUserID(), post.getCreatedAt(), post.getLikes()))
+                .map(post -> new PostDTO(post.getTitle(), post.getContents(), post.getUser().getId(), post.getCreatedAt(), post.getLikes()))
                 .toList();
 
         if (postDTOs.isEmpty()) {

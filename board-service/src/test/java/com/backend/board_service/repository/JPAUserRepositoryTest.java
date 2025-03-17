@@ -58,7 +58,7 @@ class JPAUserRepositoryTest {
         // when
         User updatedUser = new User(
                 savedUser.getId(), savedUser.getEmail(), savedUser.getPw(),
-                30, savedUser.getGender(), savedUser.getCreatedAt(), savedUser.getAddress(), null
+                30, savedUser.getGender(), savedUser.getCreatedAt(), savedUser.getAddress(), savedUser.getPosts()
         );
         userRepository.updateUser(savedUser.getId(), updatedUser);
 

@@ -4,6 +4,8 @@ import com.backend.board_service.dto.PostDTO;
 import com.backend.board_service.entity.Post;
 import com.backend.board_service.entity.User;
 import com.backend.board_service.exception.UserNotFoundException;
+import com.backend.board_service.repository.JPAPostRepository;
+import com.backend.board_service.repository.JPAUserRepository;
 import com.backend.board_service.repository.PostRepository;
 import com.backend.board_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +20,8 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class PostService {
-    private final PostRepository postRepository;
-    private final UserRepository userRepository;
+    private final JPAPostRepository postRepository;
+    private final JPAUserRepository userRepository;
 
     // 1. 게시글 작성
     public Long addPost(PostDTO dto) {

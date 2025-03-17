@@ -2,9 +2,11 @@ package com.backend.board_service.repository;
 
 import com.backend.board_service.dto.AddressDTO;
 import com.backend.board_service.dto.PostDTO;
+import com.backend.board_service.dto.UserDTO;
 import com.backend.board_service.dto.UserRegisterDTO;
 import com.backend.board_service.entity.Gender;
 import com.backend.board_service.entity.Post;
+import com.backend.board_service.entity.User;
 import com.backend.board_service.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,8 +28,8 @@ class JPAPostRepositoryTest {
     private PostRepository postRepository;
 
     @Autowired
-    private UserService userService;
-    private Long userId;
+    private UserRepository userRepository;
+    private User savedUser;
 
     @BeforeEach
     void setUp() {
@@ -36,16 +38,17 @@ class JPAPostRepositoryTest {
                 "test@email.com", "password123", 25, Gender.MALE, LocalDateTime.now(),
                 new AddressDTO("서울", "강남대로 1", "12345")
         );
-        userId = userService.addUser(testUserDTO);
+        User user = User.fromRegisterDTO(testUserDTO);
+        savedUser = userRepository.saveUser(user);
     }
 
     @Test
     void 게시글_저장_및_조회() {
         // given
-        PostDTO postDTO = new PostDTO("테스트 제목", "테스트 내용", userId, LocalDateTime.now(), 0);
+        PostDTO postDTO = new PostDTO("테스트 제목", "테스트 내용", savedUser.getId(), LocalDateTime.now(), 0);
 
         // DTO -> Post 변환
-        Post post = Post.fromRegisterDTO(postDTO);
+        Post post = Post.fromRegisterDTO(postDTO, savedUser);
 
         // when
         Post savedPost = postRepository.savePost(post);
@@ -53,7 +56,7 @@ class JPAPostRepositoryTest {
 
         // then
         assertThat(foundPost).isPresent();
-        assertThat(foundPost.get().getUserID()).isEqualTo(post.getUserID());
+        assertThat(foundPost.get().getUser().getId()).isEqualTo(post.getUser().getId());
         assertThat(foundPost.get().getTitle()).isEqualTo(post.getTitle());
         assertThat(foundPost.get().getContents()).isEqualTo(post.getContents());
     }
@@ -61,17 +64,17 @@ class JPAPostRepositoryTest {
     @Test
     void 게시글_사용자_상세조회() {
         // given
-        PostDTO postDTO = new PostDTO("테스트 제목", "테스트 내용", userId, LocalDateTime.now(), 0);
-        PostDTO postDTO2 = new PostDTO("테스트 제목", "테스트 내용", userId, LocalDateTime.now(), 0);
+        PostDTO postDTO = new PostDTO("테스트 제목", "테스트 내용", savedUser.getId(), LocalDateTime.now(), 0);
+        PostDTO postDTO2 = new PostDTO("테스트 제목", "테스트 내용", savedUser.getId(), LocalDateTime.now(), 0);
 
         // DTO -> Post 변환
-        Post post = Post.fromRegisterDTO(postDTO);
-        Post post2 = Post.fromRegisterDTO(postDTO2);
+        Post post = Post.fromRegisterDTO(postDTO, savedUser);
+        Post post2 = Post.fromRegisterDTO(postDTO2, savedUser);
 
         // when
         postRepository.savePost(post);
         postRepository.savePost(post2);
-        List<Post> foundPost = postRepository.findByUserId(userId);
+        List<Post> foundPost = postRepository.findByUserId(savedUser.getId());
 
         // then
         assertThat(foundPost.size()).isEqualTo(2);
@@ -80,19 +83,19 @@ class JPAPostRepositoryTest {
     @Test
     void 게시글_수정() {
         // given
-        PostDTO postDTO = new PostDTO("테스트 제목", "테스트 내용", userId, LocalDateTime.now(), 0);
-        Post post = Post.fromRegisterDTO(postDTO);
+        PostDTO postDTO = new PostDTO("테스트 제목", "테스트 내용", savedUser.getId(), LocalDateTime.now(), 0);
+        Post post = Post.fromRegisterDTO(postDTO, savedUser);
         Post savedPost = postRepository.savePost(post);
 
         // when
-//        Post updatedPost = new Post(savedPost.getId(), "수정 테스트 제목", "수정 테스트 내용",
-//                savedPost.getUserID(), savedPost.getCreatedAt(), savedPost.getLikes());
-//
-//        postRepository.updatePost(savedPost.getId(), updatedPost);
         String title = "수정 테스트 제목";
         String contents = "수정 테스트 내용";
         Integer likeCount = 1;
-        postRepository.updatePost(savedPost.getId(), title, contents, likeCount);
+        PostDTO postDTO2 = new PostDTO(title, contents, savedUser.getId(), LocalDateTime.now(), likeCount);
+
+        // DTO -> Post 변환
+        Post repost = Post.fromRegisterDTO(postDTO2, savedUser);
+        postRepository.updatePost(savedPost.getId(), repost);
 
         // then
         Optional<Post> foundPost = postRepository.findByPostId(savedPost.getId());
@@ -105,8 +108,8 @@ class JPAPostRepositoryTest {
     @Test
     void 게시글_삭제() {
         // given
-        PostDTO postDTO = new PostDTO("테스트 제목", "테스트 내용", userId, LocalDateTime.now(), 0);
-        Post post = Post.fromRegisterDTO(postDTO);
+        PostDTO postDTO = new PostDTO("테스트 제목", "테스트 내용", savedUser.getId(), LocalDateTime.now(), 0);
+        Post post = Post.fromRegisterDTO(postDTO, savedUser);
         Post savedPost = postRepository.savePost(post);
 
         // when
@@ -120,8 +123,8 @@ class JPAPostRepositoryTest {
     @Test
     void 좋아요_업데이트() {
         // given
-        PostDTO postDTO = new PostDTO("테스트 제목", "테스트 내용", userId, LocalDateTime.now(), 0);
-        Post post = Post.fromRegisterDTO(postDTO);
+        PostDTO postDTO = new PostDTO("테스트 제목", "테스트 내용", savedUser.getId(), LocalDateTime.now(), 0);
+        Post post = Post.fromRegisterDTO(postDTO, savedUser);
         Post savedPost = postRepository.savePost(post);
 
         // when

@@ -34,7 +34,7 @@ public class User {
     @Column(nullable = false)
     private Gender gender;                  // 성별
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "createdAt", nullable = false, updatable = false)
     private LocalDateTime createdAt;        // 작성 시간
 
     @OneToOne(optional = false, cascade = CascadeType.ALL)
@@ -57,7 +57,7 @@ public class User {
     }
 
     public User updateUserInfo(String pw, Integer age, Gender gender, Address address) {
-        return this.toBuilder()   // toBuilder()가 생성되도록 toBuilder=true 옵션 필요
+        return this.toBuilder()
                 .pw(pw != null ? pw : this.pw)
                 .age(age != null ? age : this.age)
                 .gender(gender != null ? gender : this.gender)
