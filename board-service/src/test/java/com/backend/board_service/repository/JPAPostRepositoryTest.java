@@ -30,6 +30,7 @@ class JPAPostRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private EntityManager em;
 

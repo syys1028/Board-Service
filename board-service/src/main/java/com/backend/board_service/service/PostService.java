@@ -83,7 +83,7 @@ public class PostService {
                 .contents(contents)
                 .likes(likes)
                 .build();
-        postRepository.savePost(updatedPost);
+        postRepository.updatePost(updatedPost.getId(), updatedPost);
         return true;
     }
 
@@ -98,7 +98,7 @@ public class PostService {
         return true;
     }
 
-    // 6. 좋아요 수 업데이트 -> 아직 실제 사용 X
+    // 6. 좋아요 수 업데이트
     public boolean updatePostLike(Long id, Integer likes) {
         Optional<Post> postId = postRepository.findByPostId(id);
         if (postId.isEmpty()) {
@@ -113,7 +113,7 @@ public class PostService {
         Post updatedPost = post.toBuilder()
                 .likes(likes)
                 .build();
-        postRepository.savePost(updatedPost);  // <- 좋아요만 업데이트
+        postRepository.updatePostLike(updatedPost.getId(), likes);  // <- 좋아요만 업데이트
         return true;
     }
 }

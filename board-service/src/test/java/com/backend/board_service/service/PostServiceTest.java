@@ -7,6 +7,7 @@ import com.backend.board_service.dto.UserRegisterDTO;
 import com.backend.board_service.entity.Gender;
 import com.backend.board_service.entity.Post;
 import com.backend.board_service.repository.PostRepository;
+import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,9 @@ class PostServiceTest {
 
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    private EntityManager em;
 
     private PostDTO postDTO;
     private Long userId;
@@ -151,6 +155,10 @@ class PostServiceTest {
 
         // when
         boolean isUpdate = postService.updatePostLike(postId, likeCount);
+
+        em.flush();
+        em.clear();
+
         Optional<PostDTO> foundPost = postService.findPostByPostId(postId);
 
         // then
