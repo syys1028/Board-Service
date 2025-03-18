@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @Repository
 public class JPAPostRepository implements PostRepository {
+
     private final EntityManager em;
 
     public JPAPostRepository(EntityManager em) {

@@ -34,7 +34,7 @@ public class User {
     @Column(nullable = false)
     private Gender gender;                  // 성별
 
-    @Column(name = "createdAt", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;        // 작성 시간
 
     @OneToOne(optional = false, cascade = CascadeType.ALL)

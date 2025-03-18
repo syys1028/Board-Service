@@ -8,6 +8,7 @@ import com.backend.board_service.entity.Gender;
 import com.backend.board_service.entity.Post;
 import com.backend.board_service.entity.User;
 import com.backend.board_service.service.UserService;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ class JPAPostRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private EntityManager em;
+
     private User savedUser;
 
     @BeforeEach
@@ -95,6 +99,7 @@ class JPAPostRepositoryTest {
 
         // DTO -> Post 변환
         Post repost = Post.fromRegisterDTO(postDTO2, savedUser);
+        repost = repost.toBuilder().id(savedPost.getId()).build();
         postRepository.updatePost(savedPost.getId(), repost);
 
         // then
@@ -130,6 +135,9 @@ class JPAPostRepositoryTest {
         // when
         Integer likeCount = 1;
         postRepository.updatePostLike(savedPost.getId(), likeCount);
+
+        em.flush();
+        em.clear();
 
         // then
         Optional<Post> foundPost = postRepository.findByPostId(savedPost.getId());

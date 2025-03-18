@@ -12,6 +12,7 @@ import java.util.Optional;
 @Repository
 @Transactional
 public class JPAUserRepository implements UserRepository {
+
     private final EntityManager em;
 
     public JPAUserRepository(EntityManager em) {
