@@ -145,4 +145,28 @@ class JPAPostRepositoryTest {
         assertThat(foundPost).isPresent();
         assertThat(foundPost.get().getLikes()).isEqualTo(1);
     }
+
+    @Test
+    void 게시글_검색_성공() {
+        // given
+        PostDTO postDTO1 = new PostDTO("Spring Boot Tutorial", "Learn Spring Boot with examples", savedUser.getId(), LocalDateTime.now(), 0);
+        PostDTO postDTO2 = new PostDTO("QueryDSL Example", "Learn QueryDSL basics", savedUser.getId(), LocalDateTime.now(), 0);
+        PostDTO postDTO3 = new PostDTO("Hibernate Guide", "Deep dive into Hibernate", savedUser.getId(), LocalDateTime.now(), 0);
+
+        Post post1 = Post.fromRegisterDTO(postDTO1, savedUser);
+        Post post2 = Post.fromRegisterDTO(postDTO2, savedUser);
+        Post post3 = Post.fromRegisterDTO(postDTO3, savedUser);
+
+        postRepository.savePost(post1);
+        postRepository.savePost(post2);
+        postRepository.savePost(post3);
+
+        // when
+        List<Post> result = postRepository.searchPosts("Spring");
+
+        // then
+        assertThat(result).isNotEmpty();
+        assertThat(result).extracting("title").contains("Spring Boot Tutorial");
+    }
+
 }

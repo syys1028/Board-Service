@@ -13,4 +13,5 @@ public interface PostRepository {
     void updatePost(Long id, Post post);                // 4. 게시글 수정
     void deletePost(Long id);                           // 5. 게시글 삭제
     void updatePostLike(Long id, Integer likes);        // 6. 게시글 좋아요 업데이트
+    List<Post> searchPosts(String keyword);             // 7. 특정 키워드 게시글 검색
 }

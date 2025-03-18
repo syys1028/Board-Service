@@ -42,6 +42,7 @@ public class User {
     private Address address;                // 주소
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Post> posts = new ArrayList<>();
 
     // DTO -> User로 변환

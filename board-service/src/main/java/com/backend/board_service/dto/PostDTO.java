@@ -25,5 +25,5 @@ public class PostDTO {
     @NotNull
     private Long userID;                // 작성자 ID (User 테이블의 ID)
     private LocalDateTime createdAt;    // 작성 시간
-    private Integer likes = 0;          // 좋아요 수
+    private Integer likes;          // 좋아요 수
 }

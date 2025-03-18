@@ -1,6 +1,8 @@
 package com.backend.board_service.repository;
 
 import com.backend.board_service.entity.Post;
+import com.backend.board_service.entity.QPost;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.jdbc.core.RowMapper;
@@ -73,4 +75,16 @@ public class JPAPostRepository implements PostRepository {
                 .setParameter("id", id)
                 .executeUpdate();
     }
+
+    // 7. 특정 키워드 게시글 검색 (QueryDSL 사용)
+    @Override
+    public List<Post> searchPosts(String keyword) {
+        QPost post = QPost.post;
+        return new JPAQueryFactory(em)
+                .selectFrom(post)
+                .where(post.title.containsIgnoreCase(keyword))
+                .fetch();
+    }
+
+
 }
