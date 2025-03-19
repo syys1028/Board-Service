@@ -2,7 +2,6 @@ package com.backend.board_service.repository;
 
 import com.backend.board_service.dto.AddressDTO;
 import com.backend.board_service.dto.UserRegisterDTO;
-import com.backend.board_service.entity.Address;
 import com.backend.board_service.entity.Gender;
 import com.backend.board_service.entity.User;
 import org.junit.jupiter.api.Test;
@@ -14,11 +13,10 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class JPAUserRepositoryTest {
+class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -35,7 +33,7 @@ class JPAUserRepositoryTest {
         User user = User.fromRegisterDTO(userDTO);
 
         // when
-        User savedUser = userRepository.saveUser(user);
+        User savedUser = userRepository.save(user);
         Optional<User> foundUser = userRepository.findByEmail(savedUser.getEmail());
 
         // then
@@ -53,14 +51,13 @@ class JPAUserRepositoryTest {
                 new AddressDTO("군산", "나운우회로 91", "54124")
         );
         User user = User.fromRegisterDTO(userDTO);
-        User savedUser = userRepository.saveUser(user);
+        User savedUser = userRepository.save(user);
 
         // when
-        User updatedUser = new User(
-                savedUser.getId(), savedUser.getEmail(), savedUser.getPw(),
-                30, savedUser.getGender(), savedUser.getCreatedAt(), savedUser.getAddress(), savedUser.getPosts()
-        );
-        userRepository.updateUser(savedUser.getId(), updatedUser);
+        User updatedUser = savedUser.toBuilder()
+                .age(30)
+                .build();
+        userRepository.save(updatedUser);
 
         // then
         Optional<User> foundUser = userRepository.findByEmail(savedUser.getEmail());
@@ -76,10 +73,10 @@ class JPAUserRepositoryTest {
                 new AddressDTO("군산", "나운우회로 91", "54124")
         );
         User user = User.fromRegisterDTO(userDTO);
-        User savedUser = userRepository.saveUser(user);
+        User savedUser = userRepository.save(user);
 
         // when
-        userRepository.deleteUser(savedUser.getId());
+        userRepository.deleteById(savedUser.getId());
 
         // then
         Optional<User> foundUser = userRepository.findByEmail(savedUser.getEmail());

@@ -8,6 +8,8 @@ import com.backend.board_service.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,16 +33,15 @@ public class PostController {
 
     // 2. 게시글 목록 조회 (GET /posts)
     @GetMapping
-    public ResponseEntity<List<PostDTO>> getAllPosts() {
-        List<PostDTO> postDTOs = postService.findAllPosts().stream()
-                .map(post -> new PostDTO(post.getTitle(), post.getContents(), post.getUser().getId(), post.getCreatedAt(), post.getLikes()))
-                .toList();
+    public ResponseEntity<Page<PostDTO>> getAllPosts(Pageable pageable) {
+        Page<PostDTO> postDTOs = postService.findAllPosts(pageable).map(post ->
+                new PostDTO(post.getTitle(), post.getContents(), post.getUser().getId(), post.getCreatedAt(), post.getLikes()));
         return ResponseEntity.ok(postDTOs);
     }
 
     // 3-1. 게시글 상세 조회 - PostId (GET /posts/{userId})
     @GetMapping("/{id}")
-    public ResponseEntity<PostDTO> getUserPost(@PathVariable("id") Long postId) {
+    public ResponseEntity<PostDTO> getPost(@PathVariable("id") Long postId) {
         PostDTO postDTO = postService.findPostByPostId(postId)
                 .orElseThrow(() -> new PostNotFoundException("해당 게시물이 존재하지 않습니다."));
         return ResponseEntity.ok(postDTO);
@@ -48,19 +49,14 @@ public class PostController {
 
     // 3-2. 게시글 상세 조회 - UserId (GET /posts/{userId})
     @GetMapping("/user/{email}")
-    public ResponseEntity<List<PostDTO>> getUserPost(@PathVariable("email") String email) {
+    public ResponseEntity<Page<PostDTO>> getUserPosts(@PathVariable("email") String email, Pageable pageable) {
         Long userId = userService.getUserIdByEmail(email);
         if (userId == null) {
-            throw new IllegalArgumentException("해당 이메일의 사용자가 존재하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        List<PostDTO> postDTOs = postService.findPostByUserId(userId).stream()
-                .map(post -> new PostDTO(post.getTitle(), post.getContents(), post.getUser().getId(), post.getCreatedAt(), post.getLikes()))
-                .toList();
-
-        if (postDTOs.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 게시글 없을 때 204 No Content
-        }
+        Page<PostDTO> postDTOs = postService.findPostByUserId(userId, pageable).map(post ->
+                new PostDTO(post.getTitle(), post.getContents(), post.getUser().getId(), post.getCreatedAt(), post.getLikes()));
 
         return ResponseEntity.ok(postDTOs);
     }
@@ -68,20 +64,14 @@ public class PostController {
     // 4. 게시글 수정 (PUT /posts/{id})
     @PutMapping("/{id}")
     public ResponseEntity<Void> updatePost(@PathVariable("id") Long postId, @Valid @RequestBody PostUpdateDTO postUpdateDTO) {
-        boolean updated = postService.updatePost(postId, postUpdateDTO.getTitle(), postUpdateDTO.getContents(), postUpdateDTO.getLikes());
-        if (updated) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        postService.updatePost(postId, postUpdateDTO.getTitle(), postUpdateDTO.getContents(), postUpdateDTO.getLikes());
+        return ResponseEntity.ok().build();
     }
 
     // 5. 게시글 삭제 (DELETE /posts/{id})
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable("id") Long postId) {
-        boolean deleted = postService.deletePost(postId);
-        if (deleted) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        postService.deletePost(postId);
+        return ResponseEntity.ok().build();
     }
 }

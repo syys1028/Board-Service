@@ -1,17 +1,28 @@
 package com.backend.board_service.repository;
 
 import com.backend.board_service.entity.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface PostRepository {
-    Post savePost(Post post);                           // 1. 게시글 작성
-    List<Post> findAll();                               // 2. 게시글 목록 조회
-    Optional<Post> findByPostId(Long id);               // 3-1. 게시글 상세 조회 (게시글 id)
-    List<Post> findByUserId(Long userId);               // 3-2. 게시글 상세 조회 (유저 id)
-    void updatePost(Long id, Post post);                // 4. 게시글 수정
-    void deletePost(Long id);                           // 5. 게시글 삭제
-    void updatePostLike(Long id, Integer likes);        // 6. 게시글 좋아요 업데이트
-    List<Post> searchPosts(String keyword);             // 7. 특정 키워드 게시글 검색
+public interface PostRepository extends JpaRepository<Post, Long> {
+
+    Optional<Post> findById(Long id);                           // 1. 게시글 상세 조회 (게시글 id)
+
+    Page<Post> findByUserId(Long userId, Pageable pageable);    // 2. 게시글 상세 조회 (유저 id)
+
+    @Query("SELECT p FROM Post p WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<Post> searchPosts(@Param("keyword") String keyword);   // 3. 특정 키워드 게시글 검색
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Post p SET p.likes = :likes WHERE p.id = :id")
+    void updatePostLike(@Param("id") Long id, @Param("likes") Integer likes); // 4. 게시글 좋아요 업데이트
 }

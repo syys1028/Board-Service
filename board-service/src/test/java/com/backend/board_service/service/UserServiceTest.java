@@ -74,8 +74,8 @@ class UserServiceTest {
         );
 
         // when
-        boolean isUpdate = userService.updateUser(userId, updatedUserDTO);
-        Optional<UserDTO> foundUser = userService.findUserById(userId);
+        boolean isUpdate = userService.updateUser(testUserDTO.getEmail(), updatedUserDTO);
+        Optional<UserDTO> foundUser = userService.findUserByEmail(testUserDTO.getEmail());
 
         // then
         assertThat(isUpdate).isTrue();
@@ -88,10 +88,10 @@ class UserServiceTest {
     @Test
     void 회원_삭제_성공() {
         // given
-        Long userId = userService.addUser(testUserDTO);
+        userService.addUser(testUserDTO);
 
         // when
-        boolean isDelete = userService.deleteUser(userId);
+        boolean isDelete = userService.deleteUser(testUserDTO.getEmail());
         Optional<UserDTO> foundUser = userService.findUserByEmail(testUserDTO.getEmail());
 
         // then
@@ -105,11 +105,11 @@ class UserServiceTest {
         Long userId = userService.addUser(testUserDTO);
 
         // when
-        Optional<UserDTO> foundUser = userService.findUserById(userId);
+        Optional<UserDTO> foundUser = userService.findUserByEmail(testUserDTO.getEmail());
 
         // then
         assertThat(foundUser).isPresent();
-        String encryptedPassword = userRepository.findById(userId).get().getPw();
+        String encryptedPassword = userRepository.findByEmail(testUserDTO.getEmail()).get().getPw();
 
         assertThat(encryptedPassword).isNotEqualTo(testUserDTO.getPw()); // 원래 비밀번호와 다름
         assertThat(passwordEncoder.matches(testUserDTO.getPw(), encryptedPassword)).isTrue(); // matches()로 검증

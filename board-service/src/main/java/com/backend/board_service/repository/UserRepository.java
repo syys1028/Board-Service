@@ -1,14 +1,17 @@
 package com.backend.board_service.repository;
 
 import com.backend.board_service.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface UserRepository {
-    User saveUser(User user);                       // 1. 회원 가입
-    Optional<User> findById(Long id);               // 2-1. 회원 정보 조회 (아이디)
-    Optional<User> findByEmail(String email);       // 2-2. 회원 정보 조회 (이메일)
-    void updateUser(Long id, User user);            // 3. 회원 정보 수정
-    void deleteUser(Long id);                       // 4. 회원 삭제
-    boolean existsById(Long id);                    // 5. 아이디 존재 확인
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String email);
+
+    @Query("SELECT u FROM User u JOIN FETCH u.address WHERE u.id = :id")
+    Optional<User> findByAddress(@Param("id") Long id);
+
+    boolean existsByEmail(String email);
 }

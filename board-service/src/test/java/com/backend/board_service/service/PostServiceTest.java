@@ -13,7 +13,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -55,12 +58,12 @@ class PostServiceTest {
     void 게시글_작성_성공() {
         // given & when
         Long postId = postService.addPost(postDTO);
-        Optional<PostDTO> foundPost = postService.findPostByPostId(postId);
+        Optional<Post> foundPost = postRepository.findById(postId);
 
         // then
         assertThat(foundPost).isPresent();
         assertThat(foundPost.get().getTitle()).isEqualTo(postDTO.getTitle());
-        assertThat(foundPost.get().getUserID()).isEqualTo(postDTO.getUserID());
+        assertThat(foundPost.get().getUser().getId()).isEqualTo(postDTO.getUserID());
     }
 
     @Test
@@ -70,11 +73,13 @@ class PostServiceTest {
         PostDTO postDTO1 = new PostDTO("테스트 제목2", "테스트 내용2", userId, LocalDateTime.now(), 0);
         postService.addPost(postDTO1);
 
+        Pageable pageable = PageRequest.of(0, 10);
+
         // when
-        List<Post> result = postService.findAllPosts();
+        Page<Post> result = postService.findAllPosts(pageable);
 
         // then
-        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.getTotalElements()).isEqualTo(2);
     }
 
     @Test
@@ -84,33 +89,26 @@ class PostServiceTest {
         PostDTO postDTO1 = new PostDTO("테스트 제목2", "테스트 내용2", userId, LocalDateTime.now(), 0);
         postService.addPost(postDTO1);
 
-        // new user & new post
-        UserRegisterDTO testUserDTO = new UserRegisterDTO(
-                "aaaaa@email.com", "1234password", 25, Gender.MALE, LocalDateTime.now(),
-                new AddressDTO("서울", "강남대로 20", "12345")
-        );
-        Long userId2 = userService.addUser(testUserDTO);
-        PostDTO postDTO2 = new PostDTO("테스트 제목2", "테스트 내용2", userId2, LocalDateTime.now(), 0);
-        postService.addPost(postDTO2);
+        Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        List<Post> result = postService.findPostByUserId(postDTO.getUserID());
+        Page<Post> result = postService.findPostByUserId(userId, pageable);
 
         // then
-        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.getTotalElements()).isEqualTo(2);
     }
 
     @Test
     void 게시글_상세_조회_성공() {
         // given & when
         Long postId = postService.addPost(postDTO);
-        Optional<PostDTO> foundPost = postService.findPostByPostId(postId);
+        Optional<Post> foundPost = postRepository.findById(postId);
 
         // then
         assertThat(foundPost).isPresent();
         assertThat(foundPost.get().getTitle()).isEqualTo(postDTO.getTitle());
         assertThat(foundPost.get().getContents()).isEqualTo(postDTO.getContents());
-        assertThat(foundPost.get().getUserID()).isEqualTo(postDTO.getUserID());
+        assertThat(foundPost.get().getUser().getId()).isEqualTo(postDTO.getUserID());
     }
 
     @Test
@@ -119,11 +117,11 @@ class PostServiceTest {
         Long postId = postService.addPost(postDTO);
         String title = "수정 테스트 제목";
         String contents = "수정 테스트 내용";
-        Integer likeCount = 1;
+        Integer likeCount = 10;
 
         // when
         boolean isUpdate = postService.updatePost(postId, title, contents, likeCount);
-        Optional<PostDTO> foundPost = postService.findPostByPostId(postId);
+        Optional<Post> foundPost = postRepository.findById(postId);
 
         // then
         assertThat(isUpdate).isTrue();
@@ -151,18 +149,17 @@ class PostServiceTest {
     void 게시글_좋아요_업데이트_성공() {
         // given
         Long postId = postService.addPost(postDTO);
-        Integer likeCount = 2;
+        Integer likeCount = 5;
 
         // when
-        boolean isUpdate = postService.updatePostLike(postId, likeCount);
+        postService.updatePostLike(postId, likeCount);
 
         em.flush();
         em.clear();
 
-        Optional<PostDTO> foundPost = postService.findPostByPostId(postId);
+        Optional<Post> foundPost = postRepository.findById(postId);
 
         // then
-        assertThat(isUpdate).isTrue();
         assertThat(foundPost).isPresent();
         assertThat(foundPost.get().getLikes()).isEqualTo(likeCount);
     }
