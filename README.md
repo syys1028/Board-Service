@@ -45,13 +45,13 @@
 
 ### **👨‍💻 실습 과제: 게시판 기능 확장 & 성능 개선**
 
-- [ ]  **JPA를 활용한 CRUD 구현**
-- [ ]  **Lazy Loading & Fetch Join을 이용한 성능 최적화**
-- [ ]  **QueryDSL을 활용한 게시글 검색 기능**
-- [ ]  **페이지네이션 적용 (`Pageable`)**
-- [ ]  **트랜잭션 & 동시성 문제 해결 (Optimistic Lock 적용)**
-- [ ]  **배포 환경에서 H2 → MySQL 변경**
-- [ ]  **게시판 API Postman 테스트**
+- [x]  **JPA를 활용한 CRUD 구현**
+- [x]  **Lazy Loading & Fetch Join을 이용한 성능 최적화**
+- [x]  **QueryDSL을 활용한 게시글 검색 기능**
+- [x]  **페이지네이션 적용 (`Pageable`)**
+- [x]  **트랜잭션 & 동시성 문제 해결 (Optimistic Lock 적용)**
+- [x]  **배포 환경에서 H2 → MySQL 변경**
+- [x]  **게시판 API Postman 테스트**
 
 ## ✅ **완료 조건:** QueryDSL 적용 & 성능 최적화 완료
 
