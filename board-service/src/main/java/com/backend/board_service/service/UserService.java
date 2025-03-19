@@ -43,19 +43,7 @@ public class UserService {
 
     // 2-1. 회원 정보 조회 (이메일)
     public Optional<UserDTO> findUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .map(user -> new UserDTO(
-                        user.getEmail(),
-                        user.getAge(),
-                        user.getGender(),
-                        user.getCreatedAt(),
-                        AddressDTO.fromEntity(user.getAddress())
-                ));
-    }
-
-    // 2-2. 회원 정보 조회 (아이디)
-    public Optional<UserDTO> findUserById(Long id) {
-        return userRepository.findByAddress(id)
+        return userRepository.findByAddress(email)
                 .map(user -> new UserDTO(
                         user.getEmail(),
                         user.getAge(),

@@ -74,4 +74,11 @@ public class PostController {
         postService.deletePost(postId);
         return ResponseEntity.ok().build();
     }
+
+    // 6. 게시글 좋아요 업데이트 (PATCH /posts/{id}/like)
+    @PatchMapping("/{id}/like")
+    public ResponseEntity<Void> updatePostLike(@PathVariable("id") Long postId, @RequestParam("likes") Integer likes) {
+        postService.updatePostLike(postId, likes);
+        return ResponseEntity.ok().build();
+    }
 }
