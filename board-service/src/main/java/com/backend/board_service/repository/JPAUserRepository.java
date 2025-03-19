@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+// 순수 JPA (EntityManager) + JPQL 사용한 레파지토리 구현
 @Repository
 @Transactional
 public class JPAUserRepository implements UserRepository {
