@@ -9,7 +9,9 @@ import com.backend.board_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -90,8 +92,29 @@ public class PostService {
     }
 
     // 6. 좋아요 수 업데이트
+    @Transactional
     public void updatePostLike(Long id, Integer likes) {
-        postRepository.updatePostLike(id, likes);
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
+
+        int updatedRows = postRepository.updatePostLike(id, likes, post.getVersion());
+
+        if (updatedRows == 0) {
+            // 업데이트 실패 시 낙관적 락 충돌로 간주
+            throw new ObjectOptimisticLockingFailureException(Post.class, id);
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updatePostInNewTransaction(Long id, String title, String contents, Integer likes) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+        // in-place 업데이트: 직접 필드를 변경하면 Hibernate의 dirty checking이 작동하여 @Version이 자동 증가합니다.
+        post.changeTitle(title);
+        post.changeContents(contents);
+        post.changeLikes(likes);
+        postRepository.save(post);
+        postRepository.flush();
     }
 
 }

@@ -8,11 +8,13 @@ import com.backend.board_service.entity.Gender;
 import com.backend.board_service.entity.Post;
 import com.backend.board_service.repository.PostRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.OptimisticLockException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +23,12 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -149,18 +155,61 @@ class PostServiceTest {
     void 게시글_좋아요_업데이트_성공() {
         // given
         Long postId = postService.addPost(postDTO);
-        Integer likeCount = 5;
+        Post postBeforeUpdate = postRepository.findById(postId).orElseThrow();
+        Long currentVersion = postBeforeUpdate.getVersion();
 
         // when
-        postService.updatePostLike(postId, likeCount);
-
+        postService.updatePostLike(postId, 5);
         em.flush();
         em.clear();
 
-        Optional<Post> foundPost = postRepository.findById(postId);
-
         // then
+        Optional<Post> foundPost = postRepository.findById(postId);
         assertThat(foundPost).isPresent();
-        assertThat(foundPost.get().getLikes()).isEqualTo(likeCount);
+        assertThat(foundPost.get().getLikes()).isEqualTo(5);
+        assertThat(foundPost.get().getVersion()).isEqualTo(currentVersion + 1);
     }
+
+    @Test
+    void 낙관적_락_동시성_테스트() throws InterruptedException {
+        // given: 게시글 생성
+        Long postId = postService.addPost(postDTO);
+
+        // 두 개의 스레드에서 동시에 업데이트 시도
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        CountDownLatch latch = new CountDownLatch(2);
+
+        Runnable task1 = () -> {
+            try {
+                postService.updatePostInNewTransaction(postId, "업데이트 제목 - Task1", "업데이트 내용 - Task1", 5);
+            } catch (Exception e) {
+                System.out.println("Task1 Exception: " + e);
+                throw e;
+            } finally {
+                latch.countDown();
+            }
+        };
+
+        Runnable task2 = () -> {
+            try {
+                postService.updatePostInNewTransaction(postId, "업데이트 제목 - Task2", "업데이트 내용 - Task2", 10);
+            } catch (Exception e) {
+                System.out.println("Task2 Exception: " + e);
+                throw e;
+            } finally {
+                latch.countDown();
+            }
+        };
+
+        executor.submit(task1);
+        executor.submit(task2);
+
+        latch.await();
+        executor.shutdown();
+
+        // 테스트 실행 결과
+        // Task1 Exception: java.lang.IllegalArgumentException: 해당 게시글이 존재하지 않습니다.
+        // Task2 Exception: java.lang.IllegalArgumentException: 해당 게시글이 존재하지 않습니다.
+    }
+
 }

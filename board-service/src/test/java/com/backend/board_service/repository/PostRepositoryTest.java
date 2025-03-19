@@ -138,15 +138,23 @@ class PostRepositoryTest {
                 .likes(0)
                 .build());
 
+        em.flush();
+        em.clear();
+
+        Post postBeforeUpdate = postRepository.findById(savedPost.getId()).orElseThrow();
+        Long currentVersion = postBeforeUpdate.getVersion();
+
         // when
-        postRepository.updatePostLike(savedPost.getId(), 5);
+        int updatedRows = postRepository.updatePostLike(savedPost.getId(), 5, currentVersion);
         em.flush();
         em.clear();
 
         // then
         Optional<Post> foundPost = postRepository.findById(savedPost.getId());
+        assertThat(updatedRows).isEqualTo(1);
         assertThat(foundPost).isPresent();
         assertThat(foundPost.get().getLikes()).isEqualTo(5);
+        assertThat(foundPost.get().getVersion()).isEqualTo(currentVersion + 1);
     }
 
     @Test

@@ -57,12 +57,4 @@ public class User {
                 .build();
     }
 
-    public User updateUserInfo(String pw, Integer age, Gender gender, Address address) {
-        return this.toBuilder()
-                .pw(pw != null ? pw : this.pw)
-                .age(age != null ? age : this.age)
-                .gender(gender != null ? gender : this.gender)
-                .address(address != null ? address : this.address)
-                .build();
-    }
 }

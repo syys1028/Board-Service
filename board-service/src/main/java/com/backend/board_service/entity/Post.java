@@ -35,17 +35,31 @@ public class Post {
     private LocalDateTime createdAt;   // 작성 시간
 
     @Column(nullable = false)
-    private Integer likes;         // 좋아요 수
+    private Integer likes;          // 좋아요 수
 
-    // DTO -> User로 변환
-    public static Post fromRegisterDTO(PostDTO dto, User user) {
-        return Post.builder()
-                .title(dto.getTitle())
-                .contents(dto.getContents())
-                .user(user)
-                .createdAt(dto.getCreatedAt() != null ? dto.getCreatedAt() : LocalDateTime.now())
-                .likes(dto.getLikes() != null ? dto.getLikes() : 0)
+    @Version                        // Optimistic Lock
+    private Long version;
+
+    public Post updatePost(String title, String contents, Integer likes) {
+        return this.toBuilder()
+                .title(title)
+                .contents(contents)
+                .likes(likes)
                 .build();
+    }
+
+    public void updateLikeCount(Integer likes) {
+        this.likes = likes;
+    }
+
+    public void changeTitle(String newTitle) {
+        this.title = newTitle;
+    }
+    public void changeContents(String newContents) {
+        this.contents = newContents;
+    }
+    public void changeLikes(Integer newLikes) {
+        this.likes = newLikes;
     }
 
 }

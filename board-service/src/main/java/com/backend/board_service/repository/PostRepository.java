@@ -23,6 +23,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Post p SET p.likes = :likes WHERE p.id = :id")
-    void updatePostLike(@Param("id") Long id, @Param("likes") Integer likes); // 4. 게시글 좋아요 업데이트
+    @Query("UPDATE Post p SET p.likes = :likes, p.version = p.version + 1 WHERE p.id = :id AND p.version = :version")
+    int updatePostLike(@Param("id") Long id, @Param("likes") Integer likes, @Param("version") Long version);  // 4. 게시글 좋아요 업데이트
 }
