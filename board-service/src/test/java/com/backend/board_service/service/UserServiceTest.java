@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,9 @@ class UserServiceTest {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private UserRegisterDTO testUserDTO;
 
@@ -93,5 +97,21 @@ class UserServiceTest {
         // then
         assertThat(isDelete).isTrue();
         assertThat(foundUser).isEmpty();
+    }
+
+    @Test
+    void 비밀번호_암호화_테스트() {
+        // given
+        Long userId = userService.addUser(testUserDTO);
+
+        // when
+        Optional<UserDTO> foundUser = userService.findUserById(userId);
+
+        // then
+        assertThat(foundUser).isPresent();
+        String encryptedPassword = userRepository.findById(userId).get().getPw();
+
+        assertThat(encryptedPassword).isNotEqualTo(testUserDTO.getPw()); // 원래 비밀번호와 다름
+        assertThat(passwordEncoder.matches(testUserDTO.getPw(), encryptedPassword)).isTrue(); // matches()로 검증
     }
 }

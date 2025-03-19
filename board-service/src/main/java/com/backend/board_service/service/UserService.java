@@ -11,6 +11,7 @@ import com.backend.board_service.exception.NoChangesException;
 import com.backend.board_service.repository.JPAUserRepository;
 import com.backend.board_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final JPAUserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 0. 이메일 중복 확인
     private void validateDuplicateEmail(String email) {
@@ -31,16 +33,13 @@ public class UserService {
                 });
     }
 
-    // 0. 아이디 확인
-    public boolean existsById(Long userId) {
-        return userRepository.existsById(userId);
-    }
-
     // 1. 회원 가입
     public Long addUser(UserRegisterDTO dto) {
         validateDuplicateEmail(dto.getEmail());
 
-        UserRegisterDTO userDTO = new UserRegisterDTO(dto.getEmail(), dto.getPw(), dto.getAge(), dto.getGender(), LocalDateTime.now(), dto.getAddressDTO());
+        String encodedPw = passwordEncoder.encode(dto.getPw());
+
+        UserRegisterDTO userDTO = new UserRegisterDTO(dto.getEmail(), encodedPw, dto.getAge(), dto.getGender(), LocalDateTime.now(), dto.getAddressDTO());
         User user = User.fromRegisterDTO(userDTO);
         return userRepository.saveUser(user).getId();
     }
@@ -104,12 +103,11 @@ public class UserService {
 
         // 변경된 값만 반영하여 새 User 객체 생성 (setter 없이, toBuilder() 활용)
         User updatedUser = user.toBuilder()
-                .pw(userUpdateDTO.getPw() != null ? userUpdateDTO.getPw() : user.getPw())
+                .pw(userUpdateDTO.getPw() != null ? passwordEncoder.encode(userUpdateDTO.getPw()) : user.getPw()) // 비밀번호 암호화
                 .age(userUpdateDTO.getAge() != null ? userUpdateDTO.getAge() : user.getAge())
                 .gender(userUpdateDTO.getGender() != null ? userUpdateDTO.getGender() : user.getGender())
                 .address(updatedAddress)
                 .build();
-
 
         if (user.equals(updatedUser)) {
             throw new NoChangesException("변경된 사항이 없습니다.");
