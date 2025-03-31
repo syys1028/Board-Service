@@ -3,7 +3,7 @@ package com.backend.board_service.controller;
 import com.backend.board_service.dto.auth.JwtTokenDTO;
 import com.backend.board_service.dto.auth.LoginRequestDTO;
 import com.backend.board_service.entity.User;
-import com.backend.board_service.jwt.JwtTokenProvider;
+import com.backend.board_service.security.JwtTokenProvider;
 import com.backend.board_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

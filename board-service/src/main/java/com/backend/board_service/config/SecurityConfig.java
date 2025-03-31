@@ -1,7 +1,7 @@
 package com.backend.board_service.config;
 
-import com.backend.board_service.jwt.JwtAuthenticationFilter;
-import com.backend.board_service.jwt.JwtTokenProvider;
+import com.backend.board_service.security.JwtAuthenticationFilter;
+import com.backend.board_service.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

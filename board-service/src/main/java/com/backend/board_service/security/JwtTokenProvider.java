@@ -1,4 +1,4 @@
-package com.backend.board_service.jwt;
+package com.backend.board_service.security;
 
 import com.backend.board_service.dto.auth.JwtTokenDTO;
 import io.jsonwebtoken.*;

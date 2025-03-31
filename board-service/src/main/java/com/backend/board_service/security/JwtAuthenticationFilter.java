@@ -1,4 +1,4 @@
-package com.backend.board_service.jwt;
+package com.backend.board_service.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
