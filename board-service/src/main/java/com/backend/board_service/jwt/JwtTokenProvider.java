@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -29,28 +30,25 @@ public class JwtTokenProvider {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
-    // 유저 정보를 가지고 AccessToken, RefreshToken 을 생성하는 메서드
-    public JwtTokenDTO generateToken(Authentication authentication) {
-        // 권한 가져오기
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
 
+    // 유저 정보를 가지고 AccessToken, RefreshToken 생성
+    public JwtTokenDTO generateToken(Authentication authentication) {
         long now = (new Date()).getTime();
+        long accessTokenExpireTime = 1000L * 60 * 60 * 1; // 1시간
+        long refreshTokenExpireTime = 1000L * 60 * 60 * 24 * 7; // 7일
+
         // Access Token 생성
-        // 숫자 86400000은 토큰의 유효기간으로 1일을 나타냅니다. 보통 토큰은 30분 정도로 생성하는데 테스트를 위해 1일로 설정했습니다.
-        // 1일: 24*60*60*1000 = 86400000
-        Date accessTokenExpiresIn = new Date(now + 86400000);
+        Date accessTokenExpiresIn = new Date(now + accessTokenExpireTime);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim("auth", authorities)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
         // Refresh Token 생성
+        Date refreshTokenExpiresIn = new Date(now + refreshTokenExpireTime);
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + 86400000))
+                .setExpiration(refreshTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
@@ -66,19 +64,9 @@ public class JwtTokenProvider {
         // 토큰 복호화
         Claims claims = parseClaims(accessToken);
 
-        if (claims.get("auth") == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
-        }
-
-        // 클레임에서 권한 정보 가져오기
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get("auth").toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-
-        // UserDetails 객체를 만들어서 Authentication 리턴
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        // 권한 없이 이메일만으로 인증
+        UserDetails principal = new User(claims.getSubject(), "", new ArrayList<>());
+        return new UsernamePasswordAuthenticationToken(principal, "", new ArrayList<>());
     }
 
     // 토큰 정보를 검증하는 메서드
