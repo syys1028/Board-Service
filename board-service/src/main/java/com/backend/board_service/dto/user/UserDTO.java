@@ -1,4 +1,4 @@
-package com.backend.board_service.dto;
+package com.backend.board_service.dto.user;
 
 import com.backend.board_service.entity.Gender;
 import lombok.AllArgsConstructor;

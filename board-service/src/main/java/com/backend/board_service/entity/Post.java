@@ -1,7 +1,5 @@
 package com.backend.board_service.entity;
 
-import com.backend.board_service.dto.PostDTO;
-import com.backend.board_service.dto.UserRegisterDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

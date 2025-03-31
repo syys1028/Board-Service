@@ -1,18 +1,15 @@
 package com.backend.board_service.controller;
 
-import com.backend.board_service.dto.UserDTO;
-import com.backend.board_service.dto.UserRegisterDTO;
-import com.backend.board_service.dto.UserUpdateDTO;
+import com.backend.board_service.dto.user.UserDTO;
+import com.backend.board_service.dto.user.UserRegisterDTO;
+import com.backend.board_service.dto.user.UserUpdateDTO;
 import com.backend.board_service.exception.UserNotFoundException;
 import com.backend.board_service.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")

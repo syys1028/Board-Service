@@ -1,7 +1,7 @@
 package com.backend.board_service.controller;
 
-import com.backend.board_service.dto.JwtTokenDTO;
-import com.backend.board_service.dto.LoginRequestDTO;
+import com.backend.board_service.dto.auth.JwtTokenDTO;
+import com.backend.board_service.dto.auth.LoginRequestDTO;
 import com.backend.board_service.entity.User;
 import com.backend.board_service.jwt.JwtTokenProvider;
 import com.backend.board_service.repository.UserRepository;

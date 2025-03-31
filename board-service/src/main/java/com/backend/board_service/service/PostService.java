@@ -1,6 +1,6 @@
 package com.backend.board_service.service;
 
-import com.backend.board_service.dto.PostDTO;
+import com.backend.board_service.dto.post.PostDTO;
 import com.backend.board_service.entity.Post;
 import com.backend.board_service.entity.User;
 import com.backend.board_service.exception.UserNotFoundException;
@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service

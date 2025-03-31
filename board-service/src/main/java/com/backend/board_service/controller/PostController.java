@@ -1,21 +1,17 @@
 package com.backend.board_service.controller;
 
-import com.backend.board_service.dto.PostDTO;
-import com.backend.board_service.dto.PostUpdateDTO;
+import com.backend.board_service.dto.post.PostDTO;
+import com.backend.board_service.dto.post.PostUpdateDTO;
 import com.backend.board_service.exception.PostNotFoundException;
 import com.backend.board_service.service.PostService;
 import com.backend.board_service.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")

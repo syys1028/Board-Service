@@ -1,4 +1,4 @@
-package com.backend.board_service.dto;
+package com.backend.board_service.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

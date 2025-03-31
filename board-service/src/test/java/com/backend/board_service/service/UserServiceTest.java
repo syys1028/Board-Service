@@ -1,9 +1,9 @@
 package com.backend.board_service.service;
 
-import com.backend.board_service.dto.AddressDTO;
-import com.backend.board_service.dto.UserDTO;
-import com.backend.board_service.dto.UserRegisterDTO;
-import com.backend.board_service.dto.UserUpdateDTO;
+import com.backend.board_service.dto.user.AddressDTO;
+import com.backend.board_service.dto.user.UserDTO;
+import com.backend.board_service.dto.user.UserRegisterDTO;
+import com.backend.board_service.dto.user.UserUpdateDTO;
 import com.backend.board_service.entity.Gender;
 import com.backend.board_service.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;

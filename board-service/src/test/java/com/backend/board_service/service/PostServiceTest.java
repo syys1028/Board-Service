@@ -1,27 +1,22 @@
 package com.backend.board_service.service;
 
-import com.backend.board_service.dto.AddressDTO;
-import com.backend.board_service.dto.PostDTO;
-import com.backend.board_service.dto.UserDTO;
-import com.backend.board_service.dto.UserRegisterDTO;
+import com.backend.board_service.dto.user.AddressDTO;
+import com.backend.board_service.dto.post.PostDTO;
+import com.backend.board_service.dto.user.UserRegisterDTO;
 import com.backend.board_service.entity.Gender;
 import com.backend.board_service.entity.Post;
 import com.backend.board_service.repository.PostRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.OptimisticLockException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -29,7 +24,6 @@ import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional

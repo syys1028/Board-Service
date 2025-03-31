@@ -1,4 +1,4 @@
-package com.backend.board_service.dto;
+package com.backend.board_service.dto.post;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

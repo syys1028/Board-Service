@@ -1,8 +1,7 @@
 package com.backend.board_service.repository;
 
-import com.backend.board_service.dto.AddressDTO;
-import com.backend.board_service.dto.PostDTO;
-import com.backend.board_service.dto.UserRegisterDTO;
+import com.backend.board_service.dto.user.AddressDTO;
+import com.backend.board_service.dto.user.UserRegisterDTO;
 import com.backend.board_service.entity.Gender;
 import com.backend.board_service.entity.Post;
 import com.backend.board_service.entity.User;
