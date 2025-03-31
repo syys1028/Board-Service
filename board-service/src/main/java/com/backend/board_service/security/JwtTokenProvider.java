@@ -54,9 +54,8 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    // JWT 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드
+    // JWT 토큰 복호화
     public Authentication getAuthentication(String accessToken) {
-        // 토큰 복호화
         Claims claims = parseClaims(accessToken);
 
         // 권한 없이 이메일만으로 인증
@@ -64,7 +63,7 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(principal, "", new ArrayList<>());
     }
 
-    // 토큰 정보를 검증하는 메서드
+    // 토큰 정보 검증
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);

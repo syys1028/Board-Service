@@ -24,6 +24,7 @@ public class DatasourceConfig {
         dataSource.setUsername(dotenv.get("DB_USER"));
         dataSource.setPassword(dotenv.get("DB_PASSWORD"));
         dataSource.setDriverClassName("org.mariadb.jdbc.Driver");
+
         return dataSource;
     }
 }
