@@ -41,9 +41,18 @@ public class User {
     @JoinColumn(name = "address_id")
     private Address address;                // 주소
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+    public enum Role {
+        ROLE_USER, ROLE_ADMIN
+    }
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Post> posts = new ArrayList<>();
+
 
     // DTO -> User로 변환
     public static User fromRegisterDTO(UserRegisterDTO dto) {
