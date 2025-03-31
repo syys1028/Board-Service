@@ -1,6 +1,7 @@
 package com.backend.board_service.security;
 
 import com.backend.board_service.dto.auth.JwtTokenDTO;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -21,7 +22,10 @@ import java.util.Date;
 public class JwtTokenProvider {
     private final Key key;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
+    // Secret Key
+    public JwtTokenProvider() {
+        Dotenv dotenv = Dotenv.configure().directory("C:/dev/spring-boot/board-service/board-service").load();
+        String secretKey = dotenv.get("JWT_SECRET");
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
