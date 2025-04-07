@@ -27,7 +27,8 @@ public class SecurityConfig {
         http
                 .securityMatcher("/**") // 모든 요청에 대해 적용
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/auth/login", "/users").permitAll()  // 회원가입만 열어줌
+                        .requestMatchers("/users/**").authenticated()            // 나머지 유저 API는 인증 필요
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
