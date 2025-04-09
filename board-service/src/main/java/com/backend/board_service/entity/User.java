@@ -27,6 +27,15 @@ public class User {
     @Column(nullable = false)
     private String pw;                      // 사용자 비밀번호
 
+    @Column(nullable = false, unique = true)
+    private String nickname;                // 닉네임
+
+    @Column(nullable = false)
+    private String name;                    // 사용자 이름
+
+    @Column(nullable = false)
+    private String phone;                   // 전화번호
+
     @Column(nullable = false)
     private int age;                        // 나이
 
@@ -37,8 +46,12 @@ public class User {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;        // 작성 시간
 
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id")
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @Embedded
     private Address address;                // 주소
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -50,11 +63,14 @@ public class User {
         return User.builder()
                 .email(dto.getEmail())
                 .pw(dto.getPw())
+                .nickname(dto.getNickname())
+                .name(dto.getName())
+                .phone(dto.getPhone())
                 .age(dto.getAge())
                 .gender(dto.getGender())
-                .createdAt(dto.getCreatedAt())
                 .address(Address.fromDTO(dto.getAddressDTO()))
                 .build();
     }
+
 
 }
