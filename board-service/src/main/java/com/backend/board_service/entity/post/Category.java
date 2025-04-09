@@ -1,4 +1,4 @@
-package com.backend.board_service.entity;
+package com.backend.board_service.entity.post;
 
 public enum Category {
     SKY, WISH, MUSIC, LINE

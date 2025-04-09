@@ -1,6 +1,6 @@
 package com.backend.board_service.security;
 
-import com.backend.board_service.entity.User;
+import com.backend.board_service.entity.user.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

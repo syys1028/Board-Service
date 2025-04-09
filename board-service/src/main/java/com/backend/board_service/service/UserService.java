@@ -1,11 +1,11 @@
 package com.backend.board_service.service;
 
-import com.backend.board_service.dto.user.AddressDTO;
-import com.backend.board_service.dto.user.UserDTO;
-import com.backend.board_service.dto.user.UserRegisterDTO;
-import com.backend.board_service.dto.user.UserUpdateDTO;
-import com.backend.board_service.entity.Address;
-import com.backend.board_service.entity.User;
+import com.backend.board_service.entity.user.dto.AddressDTO;
+import com.backend.board_service.entity.user.dto.UserDTO;
+import com.backend.board_service.entity.user.dto.UserRegisterDTO;
+import com.backend.board_service.entity.user.dto.UserUpdateDTO;
+import com.backend.board_service.entity.user.Address;
+import com.backend.board_service.entity.user.User;
 import com.backend.board_service.exception.NoChangesException;
 import com.backend.board_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

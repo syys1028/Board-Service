@@ -1,8 +1,8 @@
 package com.backend.board_service.service;
 
-import com.backend.board_service.dto.post.PostDTO;
-import com.backend.board_service.entity.Post;
-import com.backend.board_service.entity.User;
+import com.backend.board_service.entity.post.dto.PostDTO;
+import com.backend.board_service.entity.post.Post;
+import com.backend.board_service.entity.user.User;
 import com.backend.board_service.exception.UserNotFoundException;
 import com.backend.board_service.repository.PostRepository;
 import com.backend.board_service.repository.UserRepository;

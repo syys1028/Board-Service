@@ -1,5 +1,6 @@
-package com.backend.board_service.entity;
+package com.backend.board_service.entity.post;
 
+import com.backend.board_service.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

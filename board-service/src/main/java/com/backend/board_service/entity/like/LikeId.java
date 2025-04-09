@@ -1,4 +1,4 @@
-package com.backend.board_service.entity;
+package com.backend.board_service.entity.like;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

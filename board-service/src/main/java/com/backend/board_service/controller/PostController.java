@@ -1,7 +1,7 @@
 package com.backend.board_service.controller;
 
-import com.backend.board_service.dto.post.PostDTO;
-import com.backend.board_service.dto.post.PostUpdateDTO;
+import com.backend.board_service.entity.post.dto.PostDTO;
+import com.backend.board_service.entity.post.dto.PostUpdateDTO;
 import com.backend.board_service.exception.PostNotFoundException;
 import com.backend.board_service.service.PostService;
 import com.backend.board_service.service.UserService;

@@ -1,10 +1,10 @@
 package com.backend.board_service.service;
 
-import com.backend.board_service.dto.user.AddressDTO;
-import com.backend.board_service.dto.post.PostDTO;
-import com.backend.board_service.dto.user.UserRegisterDTO;
-import com.backend.board_service.entity.Gender;
-import com.backend.board_service.entity.Post;
+import com.backend.board_service.entity.user.dto.AddressDTO;
+import com.backend.board_service.entity.post.dto.PostDTO;
+import com.backend.board_service.entity.user.dto.UserRegisterDTO;
+import com.backend.board_service.entity.user.Gender;
+import com.backend.board_service.entity.post.Post;
 import com.backend.board_service.repository.PostRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;

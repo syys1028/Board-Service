@@ -1,8 +1,8 @@
 package com.backend.board_service.controller;
 
-import com.backend.board_service.dto.auth.JwtTokenDTO;
-import com.backend.board_service.dto.auth.LoginRequestDTO;
-import com.backend.board_service.entity.User;
+import com.backend.board_service.security.dto.JwtTokenDTO;
+import com.backend.board_service.security.dto.LoginRequestDTO;
+import com.backend.board_service.entity.user.User;
 import com.backend.board_service.security.JwtTokenProvider;
 import com.backend.board_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

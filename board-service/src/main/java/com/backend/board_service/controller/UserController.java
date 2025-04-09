@@ -1,8 +1,8 @@
 package com.backend.board_service.controller;
 
-import com.backend.board_service.dto.user.UserDTO;
-import com.backend.board_service.dto.user.UserRegisterDTO;
-import com.backend.board_service.dto.user.UserUpdateDTO;
+import com.backend.board_service.entity.user.dto.UserDTO;
+import com.backend.board_service.entity.user.dto.UserRegisterDTO;
+import com.backend.board_service.entity.user.dto.UserUpdateDTO;
 import com.backend.board_service.exception.UserNotFoundException;
 import com.backend.board_service.service.UserService;
 import jakarta.validation.Valid;

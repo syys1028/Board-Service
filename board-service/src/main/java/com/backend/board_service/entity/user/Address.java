@@ -1,6 +1,6 @@
-package com.backend.board_service.entity;
+package com.backend.board_service.entity.user;
 
-import com.backend.board_service.dto.user.AddressDTO;
+import com.backend.board_service.entity.user.dto.AddressDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

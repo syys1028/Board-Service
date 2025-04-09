@@ -1,6 +1,7 @@
-package com.backend.board_service.entity;
+package com.backend.board_service.entity.user;
 
-import com.backend.board_service.dto.user.UserRegisterDTO;
+import com.backend.board_service.entity.post.Post;
+import com.backend.board_service.entity.user.dto.UserRegisterDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -63,14 +64,9 @@ public class User {
         return User.builder()
                 .email(dto.getEmail())
                 .pw(dto.getPw())
-                .nickname(dto.getNickname())
-                .name(dto.getName())
-                .phone(dto.getPhone())
                 .age(dto.getAge())
                 .gender(dto.getGender())
                 .address(Address.fromDTO(dto.getAddressDTO()))
                 .build();
     }
-
-
 }

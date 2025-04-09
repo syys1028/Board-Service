@@ -1,6 +1,6 @@
-package com.backend.board_service.dto.user;
+package com.backend.board_service.entity.user.dto;
 
-import com.backend.board_service.entity.Gender;
+import com.backend.board_service.entity.user.Gender;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

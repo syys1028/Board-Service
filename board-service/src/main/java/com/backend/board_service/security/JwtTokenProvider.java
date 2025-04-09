@@ -1,12 +1,11 @@
 package com.backend.board_service.security;
 
-import com.backend.board_service.dto.auth.JwtTokenDTO;
+import com.backend.board_service.security.dto.JwtTokenDTO;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;

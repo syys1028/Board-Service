@@ -1,9 +1,9 @@
 package com.backend.board_service.repository;
 
-import com.backend.board_service.dto.user.AddressDTO;
-import com.backend.board_service.dto.user.UserRegisterDTO;
-import com.backend.board_service.entity.Gender;
-import com.backend.board_service.entity.User;
+import com.backend.board_service.entity.user.dto.AddressDTO;
+import com.backend.board_service.entity.user.dto.UserRegisterDTO;
+import com.backend.board_service.entity.user.Gender;
+import com.backend.board_service.entity.user.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

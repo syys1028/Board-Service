@@ -1,12 +1,12 @@
 package com.backend.board_service.Controller;
 
 import com.backend.board_service.controller.AuthController;
-import com.backend.board_service.dto.auth.JwtTokenDTO;
-import com.backend.board_service.dto.auth.LoginRequestDTO;
-import com.backend.board_service.entity.Address;
-import com.backend.board_service.entity.Gender;
+import com.backend.board_service.security.dto.JwtTokenDTO;
+import com.backend.board_service.security.dto.LoginRequestDTO;
+import com.backend.board_service.entity.user.Address;
+import com.backend.board_service.entity.user.Gender;
+import com.backend.board_service.entity.user.User;
 import com.backend.board_service.repository.UserRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ class AuthControllerTest {
     @BeforeEach
     void setup() {
         // 테스트용 유저 저장
-        userRepository.save(com.backend.board_service.entity.User.builder()
+        userRepository.save(User.builder()
                 .email("test@email.com")
                 .pw(passwordEncoder.encode("1234"))  // 반드시 암호화!
                 .age(20)
