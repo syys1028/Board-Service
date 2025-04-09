@@ -60,13 +60,11 @@ public class Post {
                 .build();
     }
 
-    public void updateLikeCount(Integer likes) {
-        this.likes = likes;
-    }
     public void changeTitle(String newTitle) {
         this.title = newTitle;
     }
     public void changeContents(String newContents) {
         this.contents = newContents;
     }
+    public void changeLikes(Integer likes) { this.likes = likes; }
 }
