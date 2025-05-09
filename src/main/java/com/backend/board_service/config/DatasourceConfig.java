@@ -13,7 +13,7 @@ public class DatasourceConfig {
     @Bean
     public DataSource dataSource() {
         Dotenv dotenv = Dotenv.configure()
-                .directory("C:/dev/spring-boot/board-service/board-service")
+                .directory("C:/dev/spring-boot/board-service")
                 .load();
 
         //System.out.println("DB_URL: " + dotenv.get("DB_URL"));
